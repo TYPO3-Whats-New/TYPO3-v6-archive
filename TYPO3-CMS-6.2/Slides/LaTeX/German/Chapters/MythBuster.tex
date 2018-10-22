@@ -1,0 +1,137 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "MythBuster" (German Version)
+%
+% @author	Michael Schams <schams.net>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	German
+% ------------------------------------------------------------------------------
+% Chapter: MythBuster
+% ------------------------------------------------------------------------------
+
+\section{MythBuster}
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+
+	\begin{center}\huge{Kapitel 10:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{TYPO3 CMS 6.2 LTS - MythBuster}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mythen über TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item TYPO3 CMS 6.2 LTS wird das letzte TYPO3 CMS Release sein
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Die Wahrheit ist, dass trotz der Veröffentlichung von \href{http://neos.typo3.org}{TYPO3 Neos} die Entwicklung von TYPO3 CMS fortgesetzt wird und dass es auch in Zukunft weitere Versionen geben wird.
+			\normalsize
+			\newline
+
+		\item Der TYPO3 Core wurde in 6.x komplett überarbeitet
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Die Wahrheit ist, dass mit TYPO3 CMS 6.0 das PHP Konzept von "\href{http://php.net/namespaces}{Namespaces}" eingeführt wurde, was neue Klassennamen zur Folge hat. Allerdings stellt eine Kompatibilitäts- schicht in TYPO3 sicher, dass Entwickler noch weiterhin die bisherigen, veralteten Klassennamen ohne Probleme in ihren Extensions verwenden können.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mythen über TYPO3 CMS 6.2}
+
+	\begin{itemize}
+
+		\item Extensions, die für TYPO3 CMS 4.5 entwickelt wurden,\newline
+			funktionieren in 6.2 nicht mehr\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Die Wahrheit ist, dass die Core API nicht vollständig geändert wurde und eine Abwärtskompatibilität aufweist, die der \href{http://forge.typo3.org/projects/typo3v4-core/wiki/CoreDevPolicy}{Deprecation Policy} entspricht. Die meisten Extensions, die für TYPO3 CMS 4.5 entwickelt wurden, sind auch in TYPO3 CMS 6.2 lauffähig, ohne dass Modifikationen notwendig sind (oder nur geringe Anpassungen).
+			\normalsize
+			\newline
+
+		\item TemplaVoilà ist in TYPO3 6.2 nicht mehr lauffähig
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Die Wahrheit ist, dass die Entwicklergemeinschaft an einer Version von TemplaVoilà arbeitet, die auch mit TYPO3 CMS 6.2 kompatibel ist. Allerdings wird TemplaVoilà nicht weiterentwickelt und TYPO3 Integratoren sollten für zukünftige Projekte Alternativen in Erwägung ziehen.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mythen über TYPO3 CMS 6.2}
+
+	\begin{itemize}
+
+		\item \texttt{tslib\_pibase}-Extensions funktionieren nicht mehr
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Die Wahrheit ist, dass die Klasse \texttt{tslib\_pibase} auch in TYPO3 6.2 existiert, aber aufgrund der zuvor erwähnten Namespace-Konvention einen neuen Namen trägt: \texttt{\textbackslash TYPO3\textbackslash CMS\textbackslash Frontend\textbackslash Plugin\textbackslash AbstractPlugin}.\newline
+				Ein Klassenalias stellt sicher, dass auch der bisherige Name verwendet werden kann (Abwärtkompatibilität).
+			\normalsize
+			\newline
+
+		\item DAM Records können nicht nach FAL migriert werden
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Fakt ist, dass DAM nicht von TYPO3 6.x unterstützt wird. Allerdings bietet FAL eine API, die dazu bestimmt ist, sämtliche DAM-Funktionalität abzubilden. Es gibt außerdem eine \href{https://github.com/fnagel/t3ext-dam_falmigration}{DAM-to-FAL Migration Extension}.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mythen über TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item Upgrade von 4.5 zu 6.2 mit einem Upgrade-Wizard
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Gerüchten zufolge soll das "Smooth Migration" Projekt einen Upgrade-Wizard bereit stellen, der eine TYPO3 Version 4.5 automatisch zu 6.2 aktualisiert. Die Wahrheit ist, dass das Projekt das Ziel verfolgt, Information und Dokumentationen zu liefern, um TYPO3 Integratoren bei dem Migrationsprozess zu unterstützen.
+			\normalsize
+			\newline
+
+		\item TYPO3 6.2 benötigt wesentlich bessere Hardware
+			\tabto{9cm}\color{red}\textbf{\textrightarrow falsch!}\color{black}
+
+			\smaller
+				Gerüchten zufolge soll TYPO3 6.2 zehn Mal langsamer als 4.5 sein. Die Wahrheit ist, dass die Performance in den meisten Fällen identisch ist und sich die \href{http://typo3.org/about/typo3-the-cms/system-requirements/}{Mindestanforderungen} von TYPO3 CMS kaum geändert haben. Allerdings sollten Systemadministratoren einen Hardware-Upgrade generell in Erwägung ziehen, da TYPO3 4.5 bereits im Januar 2011 veröffentlicht wurde - also vor über 3 Jahren!
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

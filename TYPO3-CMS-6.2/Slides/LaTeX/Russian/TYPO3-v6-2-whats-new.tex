@@ -1,0 +1,158 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New (Russian Version)
+%
+% @author	Andrey Aksenov <aksenovaa@bk.ru>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Russian
+% ------------------------------------------------------------------------------
+
+% change the default aspect ratio and frame size
+% \documentclass[aspectratio=43]{beamer}
+%
+% specify vertical top alignment globally by the [t] class option:
+% \documentclass[t]{beamer}
+%
+% for single frames, use the same option locally:
+% \begin{frame}[t] ... \end{frame}
+\documentclass[t]{beamer}
+
+% suppress navigation bar
+\beamertemplatenavigationsymbolsempty
+
+\mode<presentation>
+{
+	\usetheme{typo3slides}
+}
+
+% global variables
+\title{TYPO3 CMS 6.2 LTS — что нового}
+\subtitle{Обзор нововведений, изменений и исправлений}
+\author{
+	\centerline{Создано:}
+	\centerline{Patrick Lobacher и Michael Schams}
+	\vspace{0.4cm}
+	\centerline{Перевод на русский:}
+	Андрей Аксёнов
+}
+\date{\today}
+
+\begin{document}
+
+% select TYPO3 Share font
+\sharefont
+
+% ------------------------------------------------------------------------------
+% Title Page
+% ------------------------------------------------------------------------------
+
+\begingroup
+	\setbeamercolor{normal text}{fg=white,bg=typo3orange}
+	\setbeamercolor{title}{fg=white}
+	\setbeamercolor{author}{fg=white}
+	\setbeamertemplate{footline}[default]
+	\begin{frame}
+		\titlepage
+	\end{frame}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% Table of Contents
+% ------------------------------------------------------------------------------
+
+% between two frames: use \newpage (not \clearpage!) to force a column break:
+% \addtocontents{toc}{\newpage}
+
+\section*{TYPO3 CMS 6.2 LTS — что нового}
+\begin{frame}[fragile]
+	\frametitle{Обзор содержания}
+	\framesubtitle{Обзор содержания}
+
+	\begin{multicols}{2}
+		\tableofcontents
+	\end{multicols}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Chapter: Introduction
+% ------------------------------------------------------------------------------
+
+\include{Chapters/Introduction}
+
+% ------------------------------------------------------------------------------
+% Chapter 1: Install Tool
+% ------------------------------------------------------------------------------
+
+\include{Chapters/InstallTool}
+
+% ------------------------------------------------------------------------------
+% Chapter 2: TYPO3 CMS Goes Responsive
+% ------------------------------------------------------------------------------
+
+\include{Chapters/ResponsiveImages}
+
+% ------------------------------------------------------------------------------
+% Chapter 3: Backend Changes
+% ------------------------------------------------------------------------------
+
+\include{Chapters/BackendChanges}
+
+% ------------------------------------------------------------------------------
+% Chapter 4: TypoScript
+% ------------------------------------------------------------------------------
+
+\include{Chapters/TypoScript}
+
+% ------------------------------------------------------------------------------
+% Chapter 5: Package Management
+% ------------------------------------------------------------------------------
+
+\include{Chapters/PackageManagement}
+
+% ------------------------------------------------------------------------------
+% Chapter 6: In-Depth Changes
+% ------------------------------------------------------------------------------
+
+\include{Chapters/InDepthChanges}
+
+% ------------------------------------------------------------------------------
+% Chapter 7: Application Programming Interface
+% ------------------------------------------------------------------------------
+
+\include{Chapters/ApplicationProgrammingInterface}
+
+% ------------------------------------------------------------------------------
+% Chapter 8: Extbase & Fluid
+% ------------------------------------------------------------------------------
+
+\include{Chapters/ExtbaseAndFluid}
+
+% ------------------------------------------------------------------------------
+% Chapter 9: Upgrade TYPO3 CMS 4.5 to 6.2 LTS
+% ------------------------------------------------------------------------------
+
+\include{Chapters/Upgrade}
+
+% ------------------------------------------------------------------------------
+% Chapter 10: Myth Buster
+% ------------------------------------------------------------------------------
+
+\include{Chapters/MythBuster}
+
+% ------------------------------------------------------------------------------
+% Chapter 11: Sources and Authors
+% ------------------------------------------------------------------------------
+
+\include{Chapters/SourcesAndAuthors}
+
+% ------------------------------------------------------------------------------
+% Chapter: Test/Example Chapter
+% *** DO NOT INCLUDE THIS CHAPTER IN FINAL VERSION! ***
+% ------------------------------------------------------------------------------
+
+%\include{Chapters/TestChapter}
+
+% ------------------------------------------------------------------------------
+\end{document}
+

@@ -1,0 +1,230 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Package Management" (Dutch Version)
+%
+% @author	Christiaan Wiesenekker <cwiesenekker@gmail.com>
+% @author	Ric van Westhreenen <ric.vanwesthreenen@typo3.org>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Dutch
+% ------------------------------------------------------------------------------
+% Chapter: Package Management
+% ------------------------------------------------------------------------------
+
+\section{Package Management}
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+
+	\begin{center}\huge{Hoofdstuk 5:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Pakket Management}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager
+% ------------------------------------------------------------------------------
+% http://wiki.typo3.org/Blueprints/Packagemanager
+% http://forge.typo3.org/issues/47018
+% http://forge.typo3.org/issues/52737
+
+\begin{frame}[fragile]
+	\frametitle{Pakket Management}
+	\framesubtitle{Package Manager}
+
+	\begin{itemize}
+		\item TYPO3 Flow's \textbf{Pakket Manager} overgezet naar TYPO3 CMS
+		\item Ontwikkel/exploitatie gestart tijdens de ontwikkeling van TYPO3 CMS 6.1
+		\item Het project richt zich op het harmoniseren van pakket formats
+		\item Extensies in TYPO3 CMS zijn gewoon een speciaal type van de "Pakketen"
+		\item Main project goals:
+
+			\begin{itemize}
+				\item Proper API for Package Management
+				\item Vendor Namespace Support
+				\item Composer Package Support
+				\item Flow Package Support
+				\item Autoloader Re-factoring
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pakket Management}
+	\framesubtitle{Pakket Manager Integratie}
+
+	\begin{itemize}
+		\item Het verwijderen van \texttt{\$TYPO3\_CONF['EXT']['extListArray']} van bestand\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.php}\normalsize
+
+		\item Oude content van het bestand \small\texttt{typo3conf/LocalConfiguration.php} gekopieerd naar\normalsize\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.beforePackageStatesMigration.php}\normalsize
+
+		\item Bestand \texttt{typo3conf/PackageStates.php} bevat:
+
+			\begin{itemize}
+				\item status van package (active/inactive)
+				\item extensie locatie in bestands-systeem
+			\end{itemize}
+
+		\item Extenties in de volgende mappen worden automatisch gedetecteerd:
+
+			\begin{itemize}
+				\item \texttt{typo3/sysext/}
+				\item \texttt{typo3/ext/}
+				\item \texttt{typo3/contrib/}
+				\item \texttt{typo3conf/ext/}
+				\item \texttt{Packages/} \emph{(recursive)}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pakket Management}
+	\framesubtitle{Pakket Manager Integratie}
+
+	\begin{itemize}
+
+		\item Twee nieuwe (extra) bestanden in de map van de extensties:
+
+			\begin{itemize}
+				\item \texttt{composer.json}
+				\item \texttt{Classes/Package.php}
+			\end{itemize}
+
+		\item Als de extensie nodig is moet er een \texttt{protected} vlag \newline
+			worden toegevoegd in \texttt{Composer.json}
+
+		\item Als bestand \texttt{PackageStates.php} ontbreekt, wordt het (opnieuw)aangemaakt.\newline
+			Inclusief alle extenies die bovesntaande property hebben ingesteld op \texttt{TRUE}
+
+		\item Autoloader heeft zijn eigen gecachde backend
+
+		\item Verdere informatie:\newline
+			\url{http://wiki.typo3.org/Blueprints/Packagemanager}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pakket Management}
+	\framesubtitle{Pakket Manager Integratie}
+
+	Voorbeeld: \texttt{typo3conf/PackageManager.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+		% basicstyle=\fontsize{5}{7}\selectfont\ttfamily
+	}
+
+	\begin{lstlisting}
+		return array ('packages' =>
+		    array (
+		      'core' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/core',
+		          'state' => 'active',
+		          'packagePath' => 'typo3/sysext/core/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      'workspaces' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/workspaces',
+		          'state' => 'inactive',
+		          'packagePath' => 'typo3/sysext/workspaces/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      ...
+		    ),
+		    'version' => 4,
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pakket Management}
+	\framesubtitle{Pakket Manager Integratie}
+
+	Voorbeeld: \texttt{composer.json}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		{
+		  "name": "typo3/cms-indexed-search",
+		  "type": "typo3-cms-framework",
+		  "description": "TYPO3 Core",
+		  "homepage": "http://typo3.org",
+		  "license": ["GPL-2.0+"],
+		  "version": "6.2.0",
+		  "require": {
+		    "typo3/cms/-ore": "*"
+		  },
+		  "replace": {
+		    "indexed-search": "*"
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+%\begin{frame}[fragile]
+%	\frametitle{Pakket Management}
+%	\framesubtitle{Pakket Manager Integratie}
+%
+%	Voorbeeld: \texttt{Classes/Package.php}
+%
+%	\lstset{
+%	}
+%
+%	\begin{lstlisting}
+%		<?php
+%		namespace TYPO3\CMS\Cms;
+%		use TYPO3\CMS\Core\Package\Package as BasePackage;
+%
+%		/**
+%		 * This is the CMS package
+%		 */
+%		class Package extends BasePackage {
+%
+%		  /**
+%		   * @var boolean
+%		   */
+%		  protected $protected = TRUE;
+%
+%		}
+%		?>
+%	\end{lstlisting}
+%
+%\end{frame}
+
+% ------------------------------------------------------------------------------
+

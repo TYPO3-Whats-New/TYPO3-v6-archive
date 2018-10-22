@@ -1,0 +1,119 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "MythBuster" (Serbian Version)
+%
+% @author	Sinisa Mitrovic <mitrovic.sinisaa@gmail.com>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Serbian
+% ------------------------------------------------------------------------------
+% Chapter: MythBuster
+% ------------------------------------------------------------------------------
+
+\section{MythBuster}
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+
+	\begin{center}\huge{Poglavlje 10:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{TYPO3 CMS 6.2 LTS – MythBuster}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mitovi o TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item TYPO3 CMS 6.2 LTS ce biti poslednja TYPO3 CMS verzija
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Istina je, uprkos izbacivanju \href{http://neos.typo3.org}{TYPO3 Neos}, razvoj TYPO3 CMS ce se nastaviti i videcemo nova izdanja u buducnosti.
+			\normalsize
+
+		\item The TYPO3 core je potpuno preradjenu 6.x
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Istina je, da smo predstavili koncept PHP namespaces sa TYPO3 CMS 6.0, koji rezultira novim nazivima klasa. Medjutim, kompatibilni lejerosigurava, da programeri i dalje mogu da koristenazive starih klasa u njihovim prosirenjima.
+			\normalsize
+
+		\item Prosirenja razvijena za  4.5 nece raditi na 6.2
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Istina je, da se core API-ja nije promenilo potpuno i karakterise ga kompatibilnost unazad, ako je u skladu sa nasom \href{http://forge.typo3.org/projects/typo3v4-core/wiki/CoreDevPolicy}{deprecation strategy}. Core TYPO3 CMS 6.2 i dalje podrzava najveci broj prosirenja koja su pisana za 4.5 bez ili sa malo modifikacija.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mitovi o TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item TemplaVoila se ne moze korisiti u TYPO3 6.2 vise
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Istina je, zajednica radi na kompatibilnoj verziji, koja ce vam omoguciti da koristite TemplaVoila u TYPO3 CMS 6.2. Medjutim, TemplaVoila se nece dalje razvijati i integratori se ohrabruju da istrazuju alternative za buduce projekte.
+			\normalsize
+
+		\item \texttt{tslib\_pibase}-prosirenja ne rade
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Istina je, klasa \texttt{tslib\_pibase} i dalje postoji u 6.2, ali ima novo ime zbog namespace konvencije: \texttt{\textbackslash TYPO3\textbackslash CMS\textbackslash Frontend\textbackslash Plugin\textbackslash AbstractPlugin}.\newline
+				Alias klase osigurava, da staro ime i dalje radi (kompatibilni sloj).
+			\normalsize
+
+		\item Nema nacina za migraciju DAM records na 6.2 sa FAL
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Cinjenica je, da DAM ne radi sa TYPO3 6.x. Medjutim, FAL je trebalo da obezbedi API koji omogucava da se ponovo kreira sve sto je bilo moguce sa DAM. Takodje je omogucena \href{https://github.com/fnagel/t3ext-dam_falmigration}{DAM-to-FAL-migration extension}.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{MythBuster}
+	\framesubtitle{Mitovi o TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item Mozete unaprediti  4.5 na 6.2 koristeci upgrade wizard
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+
+			\smaller
+				Glasine kazu, da projekat "Glatka Migracija" obezbedjuje veliki upgrade wizard koji automatski unapredjuje TYPO3 4.5 u 6.2. Istina je, da je cilj projekta da obezbedi informacije,  dokumentaciju, otkrije nekompatibilnosti, npr. da pruzi podrsku integratorima u procesu migracije.
+			\normalsize
+
+		\item TYPO3 6.2 zahteva mnogo jaci hardver
+			\tabto{8cm}\color{red}\textbf{\textrightarrow nije tacno!}\color{black}
+			% \tabto{8.2cm}\color{red}\textbf{\textrightarrow partly true :-)}\color{black}
+
+			\smaller
+				Glasine kazu, daje verzija 6.2 10 puta sporija od verzije 4.5. Istina je, da je u vecini slucajevabrzina izvrsavanja slicnaprethodnim verzijama. \href{http://typo3.org/about/typo3-the-cms/system-requirements/}{minimum requirements} za pokretanje TYPO3 se nisu promenili. Medjutim, zbog prirode arhitekturalnih promenai novih modernih tehnologija, sistem administratoribi trebalo da imaju u vidu unapredjenje hardvera (imajte na umu: TYPO3 4.5 je pusten u Januaru 2011, skoro pre 3 godine)
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

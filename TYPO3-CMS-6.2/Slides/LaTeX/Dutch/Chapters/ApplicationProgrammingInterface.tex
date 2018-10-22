@@ -1,0 +1,331 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Application Programming Interface" (Dutch version)
+%
+% @author	Christiaan Wiesenekker <cwiesenekker@gmail.com>
+% @author	Ric van Westhreenen <ric.vanwesthreenen@typo3.org>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Dutch
+% ------------------------------------------------------------------------------
+% Chapter: Application Programming Interface
+% ------------------------------------------------------------------------------
+
+\section{Application Programming Interface}
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+
+	\begin{center}\huge{Hoofdstuk 6:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Application Programming Interface (API)}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: tsfe::checkEnableFields
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48981
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook: \texttt{tsfe::checkEnableFields}}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2, "\emph{breid uit naar subpagina's}" kan niet worden gebruikt in eigen extensies die extra regels hebben voor pagina zichtbaarheid\newline
+			\small(lijst van velden om te controleren is hard-coded in \texttt{tsfe::checkEnableFields()})\normalsize
+
+		\item In TYPO3 >= 6.2, een nieuwe hook staat het extensies toe om nieuwe regels toe te maken voor pagina zichtbaarheid wanneer 'parent pages' when parent pages "extend to subpages" hebben geactiveerd.
+		\item Class:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Frontend\textbackslash
+					Controller\textbackslash
+					TypoScriptFrontendController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['tslib/class.tslib_fe.php']['hook_checkEnableFields']
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: checkFlexFormValue in DataHandler
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49699
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook: \texttt{checkFlexFormValue} in DataHandler}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2, wanneer je de Flexform waardes update, is er geen controle of er een bestaande waarde in de database ook echt is verwijderd. 
+		\item Dit wordt een probleem, e.g. wanneer je switchable controller actions opslaat (Extbase) in de Flexform: oude acties die niet meer aanwezig mogen zijn moeten handmatig worden verwijderd
+
+		\item In TYPO3 >= 6.2, een nieuwe hook staat het to om de oude Flexform data aan te passen voor het wordt gemerged met de nieuwe
+		\item Class:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Core\textbackslash
+					DataHandling\textbackslash
+					DataHandler}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['t3lib/class.t3lib_tcemain.php']['checkFlexFormValue']
+			\end{lstlisting}
+
+		\item Method:\newline
+			\smaller
+				\texttt{checkFlexFormValue\_beforeMerge()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook to customize header in module "Web > Page"
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/52579
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook om de header aan te passen}
+
+	\begin{itemize}
+		\item In TYPO3 >= 6.2, een nieuwe hook maakt het mogelijk om de header van een pagina aan te passen in de page module (Module: "Web > Page")
+		\item De hook wordt aangeroepen voor de content van de pagina wordt gerendered.
+		\item Class:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Backend\textbackslash
+					Controller\textbackslash
+					PageLayoutController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['cms/layout/db_layout.php']['drawHeaderHook']
+			\end{lstlisting}
+
+		\item Method:\newline
+			\smaller
+				\texttt{callUserFunction()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% IRRE: Provide default values for created records
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{IRRE: standaard waardes voor gecreeerde records}
+
+	\begin{itemize}
+		\item De nieuwe TCA optie staat het to om "inline" fields in te stellen
+		\item Key \texttt{foreign\_record\_defaults} staat het toe om (default) waardes in nieuwe gecreeerde records in te stellen
+
+			\begin{lstlisting}
+				config => array(
+				  'type' => 'inline',
+				  'foreign_table' => 'tt_content',
+				  'foreign_record_defaults' => array(
+				    'CType' => 'image'
+				  ),
+				)
+			\end{lstlisting}
+
+			\small
+				Voorbeeld hierboven: \texttt{tt\_content} elementen die zijn gecreeerd voor dit IRRE veld worden standaard \textbf{image content elements}. De editor kan dit andere type instellen voor het opslaan.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (1)}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2, de module "Workspaces" kan alleen worden uitgebreid door het overschrijven van de PHP en JavaScript componenten
+		\item In TYPO3 >= 6.2, is het nu mogelijk om de definitie en het gedrag van de getoonde kolommen uit te breiden in de module
+		\item Een paar voorbeelden op de volgende slides...
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (2)}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	Voorbeeld 1 (file \texttt{ext\_localconf.php}):
+
+	\begin{lstlisting}
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+		  ['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['workspaces_logger'] =
+		  'Vendor\\WorkspacesLogger\\Hook\\DataHandlerHook';
+	\end{lstlisting}
+
+	Voorbeeld 2 (file \texttt{ext\_tables.php}):
+
+	\begin{lstlisting}
+		\TYPO3\CMS\Workspaces\Service\AdditionalColumnService::getInstance()->register(
+		  'WorkspacesLogger_StageChange',
+		  'Vendor\\WorkspacesLogger\\DataProvider'
+		);
+
+		\TYPO3\CMS\Workspaces\Service\AdditionalResourceService::getInstance()->addJavaScriptResource(
+		  'WorkspacesLogger',
+		  'EXT:myextension/Resources/Public/JavaScript/StageChange.js'
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (3)}
+
+	Voorbeeld (file \texttt{Vendor\textbackslash
+		WorkspacesLogger\textbackslash
+		Hook\textbackslash
+		DataHandlerHook}):
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		<?php
+		namespace Vendor\WorkspacesLogger\Hook;
+		use TYPO3\CMS\Core\SingletonInterface;
+
+		class DataHandlerHook implements SingletonInterface {
+
+		  const TABLE_Name = 'tx_workspaceslogger_event';
+		  const EVENT_SetStage = 91;
+
+		  /**
+		   * hook that is called when no prepared command was found
+		   */
+		  public function processCmdmap($command, $table, $id, $value, &$commandIsProcessed,
+		    \TYPO3\CMS\Core\DataHandling\DataHandler $tcemainObj) {
+		    ...
+		    $action = (string) $value['action'];
+		    if ($command === 'version' && $action === 'setStage' && $commandIsProcessed) {
+		      ...
+		    }
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% PSR-3 compatible Logger
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48880
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{PSR-3 compatible Logger}
+
+	\begin{itemize}
+		\item De TYPO3 CMS 6.2 logging API is nu PSR-3 compatible
+		\item PSR-3 richt zich op het maken van een standaard voor logging in PHP (standard of the PHP Framework Interop Group)
+
+		\item Het hoofddoel van PSR-3 is
+			"\emph{libraries toestaan tot het ontvangen van een LoggerInterface object en de logs er naar toe te schrijven in een eenvoudige en op een universele manier.}"
+
+		\item Logger interface bevat snelle log methoden zoals\newline
+			\texttt{debug()}, \texttt{warning()}, \texttt{notice()}, \texttt{alert()}, \texttt{error()}, etc.
+
+		\item  Andere bronnen:
+			\begin{itemize}
+				\item \url{http://www.php-fig.org/psr/3/}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49144 (MathUtility: Add canBeInterpretedAsFloat)
+% http://forge.typo3.org/issues/52707 (Introduce a PHP Enumeration type)
+% http://forge.typo3.org/issues/52762 (Add type converter for core types like Enumeration)
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Miscellaneous}
+
+	\begin{itemize}
+		\item Nieuwe methode \texttt{canBeInterpretedAsFloat()} in class: \texttt{MathUtility}\newline
+			\small(Dit is een analogie van: \texttt{canBeInterpretedAsInteger()})\normalsize
+		\item Nieuwe enumeration type (zonder relatie naar derde partij PHP modules):\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Type\textbackslash
+				Enumeration}\newline
+
+			Als voorbeeld gebruikt in in:\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Versioning\textbackslash
+				VersionState}\newline
+
+			...en dan als:\newline
+			\texttt{new VersionState(VersionState::DEFAULT\_STATE);}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

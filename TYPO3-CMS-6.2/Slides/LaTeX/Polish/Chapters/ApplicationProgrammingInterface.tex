@@ -1,0 +1,367 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Application Programming Interface" (Polish Version)
+%
+% @author	Tymoteusz Motylewski <t.motylewski@macopedia.pl>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Polish
+% ------------------------------------------------------------------------------
+% Chapter: Application Programming Interface
+% ------------------------------------------------------------------------------
+\section{Interfejs programowania aplikacji}
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+
+	\begin{center}\huge{Rozdział 7:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Interfejs programowania aplikacji (API)}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: tsfe::checkEnableFields
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48981
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Hak: \texttt{tsfe::checkEnableFields}}
+
+	\begin{itemize}
+		\item W TYPO3 < 6.2, "\emph{extend to subpages}" nie może być używany w swoim własnym rozszerzeniu posiadającym definicje widoczności strony\newline
+			\small(lista pól do sprawdzenia jest zakodowana w \texttt{tsfe::checkEnableFields()})\normalsize
+
+		\item W TYPO3 >= 6.2, nowy hak zezwala rozszerzeniom dostarczyć reguły widoczności strony w przypadku gdy strony rodzice posiadają włączony "extend to subpages" .
+		\item Klasa:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Frontend\textbackslash
+					Controller\textbackslash
+					TypoScriptFrontendController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['tslib/class.tslib_fe.php']['hook_checkEnableFields']
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: checkFlexFormValue in DataHandler
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49699
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Hak: \texttt{checkFlexFormValue} w DataHandler-ze}
+
+	\begin{itemize}
+		\item W TYPO3 < 6.2, gdy aktualizujemy wartości Flexform-y, nie jest sprawdzane czy istniejąca wartość w bazie nie została usunięta
+		\item To staje się problemem np. kiedy zapisujemy akcje kontrolera umożliwiającego przełączanie (Extbase) w Flexform-ie: stare akcje, które mogą być już nie używane muszą zostać usunięte ręcznie
+
+		\item W TYPO3 >= 6.2, nowy hak pozwala na dostosowanie starej Flexform-y przed tym zanim zostanie scalona z nowa
+		\item Klasa:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Core\textbackslash
+					DataHandling\textbackslash
+					DataHandler}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['t3lib/class.t3lib_tcemain.php']['checkFlexFormValue']
+			\end{lstlisting}
+
+		\item Metoda:\newline
+			\smaller
+				\texttt{checkFlexFormValue\_beforeMerge()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook to customize header in module "Web > Page"
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/52579
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Hak do modyfikownia nagłówka}
+
+	\begin{itemize}
+		\item Nowy hak w TYPO3 >= 6.2, pozwala modyfikować nagłówek strony w module strony (Module: "Web > Page")
+		\item Ten hak jest wywoływany przed wyrenderowaniem zawartości strony
+		\item Klasa:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Backend\textbackslash
+					Controller\textbackslash
+					PageLayoutController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['cms/layout/db_layout.php']['drawHeaderHook']
+			\end{lstlisting}
+
+		\item Metoda:\newline
+			\smaller
+				\texttt{callUserFunction()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% IRRE: Provide default values for created records
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{IRRE: domyślne wartości przy tworzeniu rekordów}
+
+	\begin{itemize}
+		\item Nowa opcja TCA pozwala konfigurować pola "inline"
+		\item Klucz \texttt{foreign\_record\_defaults} pozwala na ustawienie (domyślnie) wartości w nowo utworzonych rekordach
+
+			\begin{lstlisting}
+				'config' => array(
+				  'type' => 'inline',
+				  'foreign_table' => 'tt_content',
+				  'foreign_record_defaults' => array(
+				    'CType' => 'image'
+				  ),
+				)
+			\end{lstlisting}
+
+			\small
+				Przykład powyżej: \texttt{tt\_content} elementy, które są stworzone dla pola IRRE będą domyślnie jako\textbf{image content elements}. Edytor może ustawić to jako inny typ przed zapisaniem.
+			\normalsize
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Obszary robocze (1)}
+
+	\begin{itemize}
+		\item W TYPO3 < 6.2, moduł "Workspaces" może być rozszerzony jedynie przez nadpisanie komponentów PHP i JavaScript
+		\item W TYPO3 >= 6.2, możliwe jest rozszerzanie definicji i zachowania wyswietlanych kolumn w module
+		\item Klika przykładów na kolejnych slajdach...
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Obszary robocze (2)}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	Przykład (plik \texttt{ext\_localconf.php}):
+
+	\begin{lstlisting}
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+		  ['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['workspaces_logger'] =
+		  'Vendor\\WorkspacesLogger\\Hook\\DataHandlerHook';
+	\end{lstlisting}
+
+	Przykład (plik \texttt{ext\_tables.php}):
+
+	\begin{lstlisting}
+		\TYPO3\CMS\Workspaces\Service\AdditionalColumnService::getInstance()->register(
+		  'WorkspacesLogger_StageChange',
+		  'Vendor\\WorkspacesLogger\\DataProvider'
+		);
+
+		\TYPO3\CMS\Workspaces\Service\AdditionalResourceService::getInstance()->addJavaScriptResource(
+		  'WorkspacesLogger',
+		  'EXT:myextension/Resources/Public/JavaScript/StageChange.js'
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Obszary robocze (3)}
+
+	Przykład (plik \texttt{Vendor\textbackslash
+		WorkspacesLogger\textbackslash
+		Hook\textbackslash
+		DataHandlerHook}):
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		<?php
+		namespace Vendor\WorkspacesLogger\Hook;
+		use TYPO3\CMS\Core\SingletonInterface;
+
+		class DataHandlerHook implements SingletonInterface {
+
+		  const TABLE_Name = 'tx_workspaceslogger_event';
+		  const EVENT_SetStage = 91;
+
+		  /**
+		   * hook that is called when no prepared command was found
+		   */
+		  public function processCmdmap($command, $table, $id, $value, &$commandIsProcessed,
+		    \TYPO3\CMS\Core\DataHandling\DataHandler $tcemainObj) {
+		    ...
+		    $action = (string) $value['action'];
+		    if ($command === 'version' && $action === 'setStage' && $commandIsProcessed) {
+		      ...
+		    }
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% PSR-3 compatible Logger
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48880
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Kompatybilny logger PSR-3}
+
+	\begin{itemize}
+		\item CMS TYPO3 6.2 logging API jest teraz kompatybilne z PSR-3
+		\item PSR-3 ma na celu ustalenie standardu logowania w PHP (standard framework-a PHP Interop Group)
+
+		\item Głównym celem PSR-3 jest
+			"\emph{ pozwalanie bibliotekom na odbieranie obiektów LoggerInterface i wpisywanie w nich logów w prosty i uniwersalny sposób.}"
+
+		\item Logger interface zawiera skrócone metody log-u takie jak\newline
+			\texttt{debug()}, \texttt{warning()}, \texttt{notice()}, \texttt{alert()}, \texttt{error()}, etc.
+
+		\item Więcej informacji:\newline
+			\url{http://www.php-fig.org/psr/3/}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% API to CSRF protect Ajax calls in Backend
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/56345
+% http://forge.typo3.org/issues/56347 (documentation)
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{CSRF Ochrona zapytań Ajax}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Zapytania Ajax w panelu administracyjnym TYPO3 mogą być chronione przed CSRF (\textit{cross-site request forgery}) przez rejestrowanie pól przetrzymujących dane
+
+			\begin{lstlisting}
+				\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerAjaxHandler(
+				  'TxMyExt::process',
+				  '\Vendor\MyExt\AjaxHandler->process'
+				);
+			\end{lstlisting}
+
+		\item URL podanego identyfikatora Ajax jest chroniony tokenem CSRF, który jest sprawdzany w dispatcher-rze \texttt{ajax.php}
+
+			\begin{lstlisting}
+				$ajaxUrl = \TYPO3\CMS\Core\Utility\BackendUtility::getAjaxUrl('TxMyExt::process');
+			\end{lstlisting}
+
+		\item Następnie do tych ustawień możemy się dostać JavaScript-em w kontekście strony
+
+			\begin{lstlisting}
+				var ajaxUrl = TYPO3.settings.MyExt.ajaxUrl;
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49144 (MathUtility: Add canBeInterpretedAsFloat)
+% http://forge.typo3.org/issues/52707 (Introduce a PHP Enumeration type)
+% http://forge.typo3.org/issues/52762 (Add type converter for core types like Enumeration)
+
+\begin{frame}[fragile]
+	\frametitle{Interfejs programowania aplikacji}
+	\framesubtitle{Różne}
+
+	\begin{itemize}
+		\item Nowa metoda \texttt{canBeInterpretedAsFloat()} w klasie: \texttt{MathUtility}\newline
+			\small(Jest to analogiczne do: \texttt{canBeInterpretedAsInteger()})\normalsize
+		\item Nowy typ enumeracji (bez relacji z 3-cią częścią modułu PHP):\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Type\textbackslash
+				Enumeration}\newline
+
+			Dla przykładu użyte w:\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Versioning\textbackslash
+				VersionState}\newline
+
+			...a nastepnie jako:\newline
+			\texttt{new VersionState(VersionState::DEFAULT\_STATE);}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

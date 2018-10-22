@@ -1,0 +1,218 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Package Management" (Serbian Version)
+%
+% @author	Sinisa Mitrovic <mitrovic.sinisaa@gmail.com>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Serbian
+% ------------------------------------------------------------------------------
+% Chapter: Package Management
+% ------------------------------------------------------------------------------
+
+\section{Package Management}
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+
+	\begin{center}\huge{Poglavlje 5:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Package Management}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager
+% ------------------------------------------------------------------------------
+% http://wiki.typo3.org/Blueprints/Packagemanager
+% http://forge.typo3.org/issues/47018
+% http://forge.typo3.org/issues/52737
+
+	\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager}
+
+	\begin{itemize}
+		\item \textbf{Package Manager} iz Typo3 Flow je uveden u Typo3 CMS
+		\item Razvoj/istrazivanje zapoceto je za vreme razvijanja TYPO3 CMS 6.1 verzije
+		\item Ovaj projekat ima za cilj da uskladi formate razlicitih paketa
+		\item Prosirenja u TYPO3 CMS su samo specificni tipovi paketa ("Packages")
+		\item Glavni ciljevi projekta:
+
+			\begin{itemize}
+				\item Odgovarajuci API za Package Management
+				\item Vendor Namespace podrska
+				\item Composer Package podrska
+				\item Flow Package podrska
+				\item Autoloader Re-factoring
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Implementacija Package Manager-a}
+
+	\begin{itemize}
+		\item Uklonjen je \texttt{\$TYPO3\_CONF['EXT']['extListArray']} iz fajla: \newline
+			\smaller\texttt{typo3conf/LocalConfiguration.php}\normalsize
+
+		\item Stari sadrzaj fajla \small\texttt{typo3conf/LocalConfiguration.php} prekopiran je u \normalsize\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.beforePackageStatesMigration.php}\normalsize
+
+		\item Fajl \texttt{typo3conf/PackageStates.php} sadrzi:
+
+			\begin{itemize}
+				\item stanje paketa (aktivno/neaktivno)
+				\item lokacija prosirenja u fajl sistemu
+			\end{itemize}
+
+		\item Prosirenja iz sledecih direktorijuma se prepoznaju automatski:
+
+			\begin{itemize}
+				\item \texttt{typo3/sysext/}
+				\item \texttt{typo3/ext/}
+				\item \texttt{typo3/contrib/}
+				\item \texttt{typo3conf/ext/}
+				\item \texttt{Packages/} \emph{(rekurzivno)}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Implementacija Package Manager-a}
+
+	\begin{itemize}
+
+		\item Dva nova (dodatna) fajla u direktorijumu prosirenja:
+
+			\begin{itemize}
+				\item \texttt{composer.json}
+				\item \texttt{Classes/Package.php}
+			\end{itemize}
+
+		\item Ukoliko je prosirenje neophodno, oznaka \texttt{protected}\newline
+			se postavlja u fajlu \texttt{composer.json}
+
+		\item Ukoliko fajl \texttt{PackageStates.php} on ce biti (ponovno) kreiran\newline
+			i sadrzace sva prosirenja kojima je gore navedena osobina podesena na \texttt{TRUE}
+
+		\item Autoloader dobija sopstveni administrativni panel koji se kesira
+
+		\item Dodatne informacije:\newline
+			\url{http://wiki.typo3.org/Blueprints/Packagemanager}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Implementacija Package Manager-a}
+
+	Primer: \texttt{typo3conf/PackageManager.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+		% basicstyle=\fontsize{5}{7}\selectfont\ttfamily
+	}
+
+	\begin{lstlisting}
+		return array ('packages' =>
+		    array (
+		      'core' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/core',
+		          'state' => 'active',
+		          'packagePath' => 'typo3/sysext/core/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      'workspaces' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/workspaces',
+		          'state' => 'inactive',
+		          'packagePath' => 'typo3/sysext/workspaces/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      ...
+		    ),
+		    'version' => 4,
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Implementacija Package Manager-a}
+
+	Primer: \texttt{composer.json}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		{
+		  "name": "typo3/cms-indexed-search",
+		  "type": "typo3-cms-framework",
+		  "description": "TYPO3 Core",
+		  "homepage": "http://typo3.org",
+		  "license": ["GPL-2.0+"],
+		  "version": "6.2.0",
+		  "require": {
+		    "typo3/cms-core": "*"
+		  },
+		  "replace": {
+		    "indexed_search": "*"
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Implementacija Package Manager-a}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Paketi se takodje mogu aktivirati za vreme rada uz pomoc kljuca:
+			\smaller\texttt{\$GLOBALS['TYPO3\_CONF\_VARS']['EXT']['runtimeActivatedPackages'] = array(}\space\textit{packageKey}\space\texttt{);}\normalsize
+
+		\item Ovaj kljuc se aktivira odmah nakon inicijalizacije Package Management-a
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

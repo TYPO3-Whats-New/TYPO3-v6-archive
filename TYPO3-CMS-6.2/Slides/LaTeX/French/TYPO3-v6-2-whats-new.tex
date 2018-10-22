@@ -1,0 +1,162 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New (French Version)
+%
+% @author	Paul Blondiaux <pblondiaux@sodifrance.fr>
+% @author	Philippe Herault <philippe.herault@plan-net.fr>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	French
+% ------------------------------------------------------------------------------
+
+% change the default aspect ratio and frame size
+% \documentclass[aspectratio=43]{beamer}
+%
+% specify vertical top alignment globally by the [t] class option:
+% \documentclass[t]{beamer}
+%
+% for single frames, use the same option locally:
+% \begin{frame}[t] ... \end{frame}
+
+\documentclass[t]{beamer}
+
+% suppress navigation bar
+\beamertemplatenavigationsymbolsempty
+
+\mode<presentation>
+{
+	\usetheme{typo3slides}
+}
+
+% global variables
+\title{TYPO3 CMS 6.2 LTS - What's New}
+\subtitle{Résumé des nouvelles caractéristiques, changements et améliorations}
+\author{
+	\centerline{Créé par :}
+	\centerline{Patrick Lobacher et Michael Schams}
+	\vspace{0.2cm}
+	\centerline{Traduction par :}
+	Paul Blondiaux et Philippe Hérault
+	\centerline{Relecture par :}
+	Pierrick Caillon
+}
+\date{\today}
+
+\begin{document}
+
+% select TYPO3 Share font
+\sharefont
+
+% ------------------------------------------------------------------------------
+% Title Page
+% ------------------------------------------------------------------------------
+
+\begingroup
+	\setbeamercolor{normal text}{fg=white,bg=typo3orange}
+	\setbeamercolor{title}{fg=white}
+	\setbeamercolor{author}{fg=white}
+	\setbeamertemplate{footline}[default]
+	\begin{frame}
+		\titlepage
+	\end{frame}
+\endgroup
+
+% ------------------------------------------------------------------------------
+% Table of Contents
+% ------------------------------------------------------------------------------
+
+% between two frames: use \newpage (not \clearpage!) to force a column break:
+% \addtocontents{toc}{\newpage}
+
+\section*{TYPO3 CMS 6.2 LTS - What's New}
+\begin{frame}[fragile]
+	\frametitle{Sommaire}
+	\framesubtitle{Sommaire}
+
+	\begin{multicols}{2}
+		\tableofcontents
+	\end{multicols}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Chapitre : Introduction
+% ------------------------------------------------------------------------------
+
+\include{Chapters/Introduction}
+
+% ------------------------------------------------------------------------------
+% Chapitre 1 : Install Tool
+% ------------------------------------------------------------------------------
+
+\include{Chapters/InstallTool}
+
+% ------------------------------------------------------------------------------
+% Chapitre 2 : TYPO3 et le Responsive Design
+% ------------------------------------------------------------------------------
+
+\include{Chapters/ResponsiveImages}
+
+% ------------------------------------------------------------------------------
+% Chapitre 3 : Changements en Backend
+% ------------------------------------------------------------------------------
+
+\include{Chapters/BackendChanges}
+
+% ------------------------------------------------------------------------------
+% Chapitre 4 : TypoScript
+% ------------------------------------------------------------------------------
+
+\include{Chapters/TypoScript}
+
+% ------------------------------------------------------------------------------
+% Chapitre 5 : Gestion des Paquets
+% ------------------------------------------------------------------------------
+
+\include{Chapters/PackageManagement}
+
+% ------------------------------------------------------------------------------
+% Chapitre 6 : Changements en profondeur
+% ------------------------------------------------------------------------------
+
+\include{Chapters/InDepthChanges}
+
+% ------------------------------------------------------------------------------
+% Chapitre 7 : Application Programming Interface
+% ------------------------------------------------------------------------------
+
+\include{Chapters/ApplicationProgrammingInterface}
+
+% ------------------------------------------------------------------------------
+% Chapitre 8 : Extbase & Fluid
+% ------------------------------------------------------------------------------
+
+\include{Chapters/ExtbaseAndFluid}
+
+% ------------------------------------------------------------------------------
+% Chapitre 9 : Mise à jour depuis TYPO3 CMS 4.5 vers 6.2 LTS
+% ------------------------------------------------------------------------------
+
+\include{Chapters/Upgrade}
+
+% ------------------------------------------------------------------------------
+% Chapitre 10 : Myth Buster
+% ------------------------------------------------------------------------------
+
+\include{Chapters/MythBuster}
+
+% ------------------------------------------------------------------------------
+% Chapitre 11 : Sources and auteurs
+% ------------------------------------------------------------------------------
+
+\include{Chapters/SourcesAndAuthors}
+
+% ------------------------------------------------------------------------------
+% Chapter: Test/Example Chapter
+% *** DO NOT INCLUDE THIS CHAPTER IN FINAL VERSION! ***
+% ------------------------------------------------------------------------------
+
+%\include{Chapters/TestChapter}
+
+% ------------------------------------------------------------------------------
+\end{document}
+

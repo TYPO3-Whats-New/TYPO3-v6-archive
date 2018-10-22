@@ -1,0 +1,218 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Package Management" (Russian Version)
+%
+% @author	Andrey Aksenov <aksenovaa@bk.ru>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Russian
+% ------------------------------------------------------------------------------
+% Chapter: Package Management
+% ------------------------------------------------------------------------------
+
+\section{Управление пакетами}
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+
+	\begin{center}\huge{Глава 5:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Управление пакетами}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager
+% ------------------------------------------------------------------------------
+% http://wiki.typo3.org/Blueprints/Packagemanager
+% http://forge.typo3.org/issues/47018
+% http://forge.typo3.org/issues/52737
+
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+	\framesubtitle{Мастер пакетов/Package Manager}
+
+	\begin{itemize}
+		\item TYPO3 Flow \textbf{Package Manager} портирован в TYPO3 CMS
+		\item Разработка/использование началось с разработки TYPO3 CMS 6.1
+		\item Этот проект привносит гармонию в формат пакетов
+		\item Расширения в TYPO3 CMS просто имеют специфичный тип "Пакеты"/"Packages"
+		\item Цели основного проекта:
+
+			\begin{itemize}
+				\item Правильное API для управления пакетами
+				\item Поддержка области имен разработчика (Vendor Namespace)
+				\item Поддержка сочетания пакетов (Composer Package)
+				\item Поддержка пакетов Flow
+				\item Переработка автозагрузки
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+	\framesubtitle{Интеграция мастера пакетов}
+
+	\begin{itemize}
+		\item Удаление \texttt{\$TYPO3\_CONF['EXT']['extListArray']} из файла\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.php}\normalsize
+
+		\item Старое содержимое файла \small\texttt{typo3conf/LocalConfiguration.php} копируется в
+		to\normalsize\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.beforePackageStatesMigration.php}\normalsize
+
+		\item Файл \texttt{typo3conf/PackageStates.php} содержит:
+
+			\begin{itemize}
+				\item статус пакета (active/inactive)
+				\item местоположение расширения в файловой системе
+			\end{itemize}
+
+		\item Автоматически распознаются расширения в следующих директориях:
+
+			\begin{itemize}
+				\item \texttt{typo3/sysext/}
+				\item \texttt{typo3/ext/}
+				\item \texttt{typo3/contrib/}
+				\item \texttt{typo3conf/ext/}
+				\item \texttt{Packages/} \emph{(рекурсивно)}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+	\framesubtitle{Интеграция мастера пакетов}
+
+	\begin{itemize}
+
+		\item В директории расширения появились два новых (дополнительных) файла:
+
+			\begin{itemize}
+				\item \texttt{composer.json}
+				\item \texttt{Classes/Package.php}
+			\end{itemize}
+
+		\item Если расширение обязательно, нужно установить флаг \texttt{protected} в файле \texttt{composer.json}
+
+		\item Если в файле \texttt{PackageStates.php} имеется ошибка, он будет воссоздан,\newline
+			и будет содержать все расширения, с указанным выше свойством, установленным в \texttt{TRUE}
+
+		\item Автозагрузчик получил собственный внутренний кеш
+
+		\item Дополнительная информация:\newline
+			\url{http://wiki.typo3.org/Blueprints/Packagemanager}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+	\framesubtitle{Интеграция мастера пакетов}
+
+	Пример: \texttt{typo3conf/PackageManager.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+		% basicstyle=\fontsize{5}{7}\selectfont\ttfamily
+	}
+
+	\begin{lstlisting}
+		return array ('packages' =>
+		    array (
+		      'core' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/core',
+		          'state' => 'active',
+		          'packagePath' => 'typo3/sysext/core/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      'workspaces' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/workspaces',
+		          'state' => 'inactive',
+		          'packagePath' => 'typo3/sysext/workspaces/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      ...
+		    ),
+		    'version' => 4,
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+	\framesubtitle{Интеграция мастера пакетов}
+
+	Пример: \texttt{composer.json}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		{
+		  "name": "typo3/cms-indexed-search",
+		  "type": "typo3-cms-framework",
+		  "description": "TYPO3 Core",
+		  "homepage": "http://typo3.org",
+		  "license": ["GPL-2.0+"],
+		  "version": "6.2.0",
+		  "require": {
+		    "typo3/cms-core": "*"
+		  },
+		  "replace": {
+		    "indexed_search": "*"
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Управление пакетами}
+	\framesubtitle{Интеграция мастера пакетов}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Пакеты также могут быть задействованы во время выполнения, посредством ключа:
+			\smaller\texttt{\$GLOBALS['TYPO3\_CONF\_VARS']['EXT']['runtimeActivatedPackages'] = array(}\space\textit{packageKey}\space\texttt{);}\normalsize
+
+		\item Этот ключ активируется сразу после инициализации Управления пакетов
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

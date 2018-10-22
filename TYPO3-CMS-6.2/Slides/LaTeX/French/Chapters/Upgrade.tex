@@ -1,0 +1,104 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Upgrade" (French Version)
+%
+% @author	Paul Blondiaux <pblondiaux@sodifrance.fr>
+% @author	Philippe Herault <philippe.herault@plan-net.fr>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	French
+% ------------------------------------------------------------------------------
+% Chapter: Upgrade to TYPO3 CMS 6.2 LTS
+% ------------------------------------------------------------------------------
+
+\section{Migration vers TYPO3 CMS 6.2 LTS}
+\begin{frame}[fragile]
+	\frametitle{Migration vers TYPO3 CMS 6.2 LTS}
+
+	\begin{center}\huge{Chapitre 9 :}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Migration vers TYPO3 CMS 6.2 LTS}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% General Upgrade Instructions
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Migration vers TYPO3 CMS 6.2 LTS}
+	\framesubtitle{Instructions générales pour la migration}
+
+	\begin{itemize}
+
+		\item Instructions de migration :\newline
+			\smaller\url{http://wiki.typo3.org/Upgrade#Upgrading_to_6.2}\normalsize
+		\item Guide officiel TYPO3 « Installation et migration de TYPO3 » :
+			\smaller\url{http://docs.typo3.org/typo3cms/InstallationGuide}\normalsize
+				\item Approche générale :
+			\begin{itemize}
+				\item Vérifier si le système respecte la configuration requise \small(PHP, MySQL, etc.)\normalsize
+				\item Reconsidérer le \textbf{deprecation\_*.log} dans l'ancienne instance TYPO3
+				\item Mettre à jour toutes les extensions\newline
+					\small(vérifier la compatibilité avec TYPO3 6.2)\normalsize
+				\item Voir le chapitre « Install Tool » dans cette présentation
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Upgrade from TYPO3 CMS 4.5 LTS
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Migration vers TYPO3 CMS 6.2 LTS}	
+	\framesubtitle{Migration à partir d'un TYPO3 CMS 4.5 LTS}
+
+	\begin{itemize}
+		\item De nombreux sites TYPO3 passeront d'une LTS à la LTS suivante
+		\item Le projet « Smooth Migration » :
+
+			\begin{itemize}
+				\item Pour qu'une migration d'une 4.5 à une 6.2 soit aussi douce que possible
+				\item Documentation, identification des anomalies sur les extensions, etc.
+				\item \smaller\url{http://forge.typo3.org/projects/typo3cms-smoothmigration}\normalsize
+			\end{itemize}
+
+		\item EXT:typo3-upgradereport :
+
+			\begin{itemize}
+				\item Principalement développée par Steffen Ritter
+				\item Installer dans une instance de TYPO3 CMS 4.5 LTS et lancer les tests
+				\item Participer au développement
+				\item \smaller\url{https://github.com/nxpthx/typo3-upgradereport}\normalsize
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% What's New for Editors
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Migration vers TYPO3 CMS 6.2 LTS}
+	\framesubtitle{What's New for Editors}
+
+	\begin{itemize}
+		\item Résume les principaux changements entre TYPO3 CMS 4.5 et 6.2
+		\item Public cible : principalement des éditeurs (utilisateurs peu ou pas techniques)
+		\item Vise aussi à aider les agences :
+
+			\begin{itemize}
+				\item dans la préparation des réponses aux demandes de support
+				\item dans l'animation d'ateliers, séminaires, formations, etc.
+			\end{itemize}
+
+		\item Télécharger le document « \textbf{What's New for Editors} »:\newline
+			\smaller\url{http://typo3.org/download/release-notes/whats-new}\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

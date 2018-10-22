@@ -1,0 +1,118 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "MythBuster" (English Version)
+%
+% @author	Michael Schams <schams.net>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	English
+% ------------------------------------------------------------------------------
+% Chapter: MythBuster
+% ------------------------------------------------------------------------------
+\section{Pogromca mitów}
+\begin{frame}[fragile]
+	\frametitle{Pogromca mitów}
+
+	\begin{center}\huge{Rozdział 10:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{TYPO3 CMS 6.2 LTS - Pogromca mitów}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pogromca mitów}
+	\framesubtitle{Mity o TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item TYPO3 CMS 6.2 LTS będzie ostatnim wydaniem TYPO3 CMS
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Prawda jest taka, że mimo zakończenia wydawania \href{http://neos.typo3.org}{TYPO3 Neos}, rozwój TYPO3 CMS będzie trwał nadal i doczekamy się kolejnych wydań w przyszłości.
+			\normalsize
+
+		\item Rdzeń TYPO3 został całkowicie przepisany w 6.x
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Prawda jest taka, że wprowadziliśmy w TYPO3 CMS 6.0 pojęcie przestrzeni nazw z PHP, co przekłada się na nowe nazwy klas. Jednak warstwa kompatybilności zapewnia, że programiści mogą nadal używać w swoich rozszerzeniach starych nazw klas.
+			\normalsize
+
+		\item Rozszerzenia opracowane dla 4.5 nie będą działać na 6.2
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Prawda jest taka, że rdzeń API nie został zmieniony całkowicie i oferuje kompatybilność wsteczną, jeżeli rozszerzenie jest zgodne z naszą \href{http://forge.typo3.org/projects/typo3v4-core/wiki/CoreDevPolicy}{strategią amortyzacji}. Rdzeń TYPO3 6.2 nadal obsługuje większość rozszerzeń, które zostały napisane w 4.5, bez lub z małymi modyfikacjami.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pogromca mitów}
+	\framesubtitle{Mity o TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item TemplaVoila nie moze być więcej uzyte w TYPO3 6.2
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Prawda jest taka, że społeczność pracuje nad wersją kompatybilną, która pozwoli na korzystanie z TemplaVoila w TYPO3 CMS 6.2. TemplaVoila nie będzie rozwijane i zachęcamy integratorów do rozpatrzenia alternatyw dla nowych projektów.
+			\normalsize
+
+		\item Rozszerzenia oparte na \texttt{tslib\_pibase} nie działają
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Prawda jest taka, że klasa \texttt{tslib\_pibase} nadal istnieje w 6.2, ale ma nową nazwę ze względu na wprowadzenie przestrzeni nazw: \texttt{\textbackslash TYPO3\textbackslash CMS\textbackslash Frontend\textbackslash Plugin\textbackslash AbstractPlugin}.\newline
+				Alias klasy zapewnia, że stara nazwa wciąż działa (warstwa kompatybilności)
+			\normalsize
+
+		\item Nie da się przenieść rekordów do 6.2 przy użyciu FAL
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Faktem jest, że zapora nie działa w TYPO3 6.x, jednakże FAL ma na celu wspieranie API, co umożliwia odtworzenie tego co było w DAM. \href{https://github.com/fnagel/t3ext-dam_falmigration}{Pobierz DAM-to-FAL-migration}.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% MythBuster
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Pogromca mitów}
+	\framesubtitle{Mity o TYPO3 CMS 6.2}
+
+	\begin{itemize}
+		\item Możesz dokonać aktualizacji z 4.5 do 6.2 kreatorem
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+
+			\smaller
+				Pogłoski mówią, że projekt "Płynna Migracja" dostarcza duży kreator aktualizacji, który automatycznie uaktualnia TYPO3 4.5 do 6.2. Prawda jest taka, że projekt ten ma na celu dostarczenie informacji, dokumentacji, wykrywanie niezgodności itp. do wsparcia integratorów wykorzystywanych w procesie migracji.
+			\normalsize
+
+		\item TYPO3 6.2 wymaga znacznie lepszego sprzętu
+			\tabto{9cm}\color{red}\textbf{\textrightarrow nieprawda!}\color{black}
+			% \tabto{8.2cm}\color{red}\textbf{\textrightarrow partly true :-)}\color{black}
+
+			\smaller
+				Pogłoski mówią, że 6.2 jest 10 razy wolniejszy niż 4.5. Prawda jest taka, że w większości wypadków wyniki są podobne do poprzednich wersji. \href{http://typo3.org/about/typo3-the-cms/system-requirements/}{Minimalne wymagania} do uruchomienia TYPO3 nie zmieniły się. Jednakże ze względu na charakter zmian architektonicznych i nowoczesnych technologii, administratorzy powinni rozważyć modernizację sprzętu (pamiętaj: TYPO3 4.5 został wydany w styczniu 2011 roku, czyli ponad 3 lata temu).
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

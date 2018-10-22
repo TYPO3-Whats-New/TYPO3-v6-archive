@@ -1,0 +1,743 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "In-Depth Changes" (Dutch Version)
+%
+% @author	Christiaan Wiesenekker <cwiesenekker@gmail.com>
+% @author	Ric van Westhreenen <ric.vanwesthreenen@typo3.org>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Dutch
+% ------------------------------------------------------------------------------
+% Chapter: In-Depth Changes
+% ------------------------------------------------------------------------------
+
+\section{Diepgaande veranderingen}
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+
+	\begin{center}\huge{Hoofdstuk 6:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Diepgaande veranderingen}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% normalize.css
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/47920
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Normalize.css}
+
+	\begin{itemize}
+		\item Backend user interface maakt gebruik van \texttt{normalize.css},\newline
+			welke ervoor zorgt dat browsers alle elementen concistenter renderd en in lijn is met de monderne standaarden
+		\item Modern, HTML5-ready, alternatief naar de traditionele CSS reset
+		\item Doelen van \texttt{normalize.css} zijn:
+
+			\begin{itemize}
+				\item Behouden van nuttige browser standaarden in plaats van ze te verwijderen
+				\item Normaliseren van stylen voor een groot spectrum van HTML elementen
+				\item Correct bugs en veel voorkomende browser inconsistenties
+				\item Verbeterde usability met subtiele verbeteringen
+				\item Leg de code uit door het gebruik van commentaar en gedetaileerde documentatie
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% displayCond options BIT and !BIT
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/45514
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{TCA: displayCond opties BIT en !BIT}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Controleer met een multi-value veld in \texttt{displayCond} (bitwise)\newline
+			\texttt{BIT}: bit is ingesteld, \texttt{!BIT}: bit is \underline{niet} ingesteld
+	\end{itemize}
+
+	\begin{columns}[T]
+
+		\begin{column}{.5\textwidth}
+
+			\advance\leftskip+1cm
+			Uitgaande van deze TCA:
+
+			\lstset{xleftmargin=1cm}
+
+			\begin{lstlisting}
+				'content' => array(
+				  'label' => '...',
+				  'config' => array(
+				    'type' => 'check',
+				    'items' => array(
+				      array('Content A', ''),
+				      array('Content B', ''),
+				      array('Content C', ''),
+				    ),
+				  )
+				),
+			\end{lstlisting}
+
+		\end{column}
+		\begin{column}{.5\textwidth}
+
+			Voorbeelden:
+
+			\begin{lstlisting}
+				'content_a' => array(
+				  'label' => '...',
+				  'displayCond' => 'FIELD:content:BIT:1',
+				  'config' => array(
+				    'type' => 'text',
+				  )
+				),
+
+				'content_b' => array(
+				  'label' => '...',
+				  'displayCond' => 'FIELD:content:!BIT:2',
+				  'config' => array(
+				    'type' => 'text',
+				  )
+				),
+			\end{lstlisting}
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Automatic language updates for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/43703
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Taal Updates}
+
+	\begin{itemize}
+		% \item Extbase Command Controller allows to update translations of extensions for selected languages
+		\item Extbase Command Controller staat taal updates toe voor Extenties:
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']
+				  ['commandControllers'][] =
+				  'TYPO3\\CMS\\Lang\\Command\\LanguageCommandController';
+			\end{lstlisting}
+
+		\item Voorbeeld call:
+
+			\lstinline!typo3/cli_dispatch.phpsh extbase language:update de,en,fr!
+
+		\item Komma-gescheiden lijst van locales (bijv. \texttt{de,en,fr}) limiteerd de updates van deze talen
+		\item Zonder dit argument worden alle talen die zijn ingesteld in de module "Talen" geupdated
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Migrate system extension manuals to reStructured Text
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50052
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Systeem Extenties: ReST handleidingen}
+
+	\begin{itemize}
+		\item Alle systeem Extentie handleidingen zijn gemigreerd naar reStructuredText
+		\item OpenOffice handleidingen worden niet langer gebruikt en zijn verwijderd
+		\item ReST is een 'easy-to-read', what-you-see-is-what-you-get(wysiwyg) plaintext markup syntax en parser systeem
+		\item ReST bestanden van systeem Extenties worden opgeslagen in:\newline
+			\texttt{typo3/sysext/<extensionkey>/Documentation/*}
+
+		\item Verdere informatie:
+
+			\begin{itemize}
+				\item \url{http://en.wikipedia.org/wiki/ReStructuredText}
+				\item \url{http://wiki.typo3.org/ReST}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Support custom translation servers for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50052
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Custom Vertaal Servers}
+
+	\begin{itemize}
+		\item Support van custom vertaal servers voor Extenties is geimplemented
+		\item Door het gebruik van XLIFF en een nieuwe Signal/Slot,\newline
+			wordt dit een absolute 'no-brainer' (see next slide for an example)
+		\item Een mogelijke server vertaal oplossing: \textbf{Pootle}
+
+			\begin{itemize}
+				\item online translation management tool met translation interface
+				\item geschreven in Python/Django
+				\item in origine ontiwkkeld en uitgegeven door \url{translate.org.za}
+				\item GNU GPL license
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Support custom translation servers for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50052
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Custom Vertaal Servers}
+
+	Voorbeeld: \texttt{EXT:myextension/localconf.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		/**
+		 * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher
+		 */
+		$signalSlotDispatcher =
+		  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+		    'TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
+
+		$signalSlotDispatcher->connect(
+		  'TYPO3\\CMS\\Lang\\Service\\UpdateTranslationService',
+		  'postProcessMirrorUrl',
+		  'Company\\Extension\Slots\\CustomMirror',
+		  'postProcessMirrorUrl'
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Support custom translation servers for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50052
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Custom Vertaal Servers}
+
+	Voorbeeld: \texttt{EXT:myextension/Classes/Slots/CustomMirror.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		<?php
+		namespace Company\Extensions\Slots;
+		class CustomMirror {
+
+		  /**
+		   * @var string
+		   */
+		  protected static $extKey = 'myextension';
+
+		  public function postProcessMirrorUrl($extensionKey, &$mirrorUrl) {
+		    if ($extensionKey === self::$extKey) {
+		      $mirrorUrl = 'http://example.com/typo3-packages/';
+		    }
+		  }
+
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Support custom translation servers for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50052
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Custom Vertaal Servers}
+
+	Verwachtte bestand/mappen structuur op server:
+
+	\begin{lstlisting}
+		http://example.com/typo3-packages/
+		 `-- <first-letter-of-extension-key>
+		     `-- <second-letter-of-extension-key>
+		         `-- <extension-key>-l10n
+		             |-- <extension-key>-l10n-de.zip
+		             |-- <extension-key>-l10n-fr.zip
+		             |-- <extension-key>-l10n-it.zip
+		             `-- <extension-key>-l10n.xml
+	\end{lstlisting}
+
+	Bijvoorbeeld:
+
+	\begin{lstlisting}
+		http://example.com/typo3-packages/m/y/myextension-l10n/myextension-l10n.xml
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Support custom translation servers for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50052
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Custom Vertaal Servers}
+
+	Voorbeeld: \texttt{<extension-key>-l10n.xml}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		<?xml version="1.0" standalone="yes" ?>
+		  <TERlanguagePackIndex>
+		    <meta>
+		      <timestamp>1374841386</timestamp>
+		      <date>2013-07-26 14:23:06</date>
+		    </meta>
+		    <languagePackIndex>
+		    <languagepack language="de">
+		      <md5>1cc7046c3b624ba1fb1ef565343b84a1</md5>
+		    </languagepack>
+		    <languagepack language="fr">
+		     <md5>f00f73ae5c43cb68392e6c508b65de7a</md5>
+		    </languagepack>
+		    <languagepack language="it">
+		     <md5>cd59530ce1ee0a38e6309544be6bcb3d</md5>
+		    </languagepack>
+		  </languagePackIndex>
+		</TERlanguagePackIndex>
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Automatic import of t3d files for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51437
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Automatische t3d Import}
+
+	\begin{itemize}
+		\item Extenties kunnen nu een automatisch een import initaliseren van \textbf{t3d packages} \newline
+			bij installatie van een Extentie
+		\item t3d bestanden bevatten dingen als data, relaties en bestanden. 
+		\item Het T3D bestand moet \texttt{data.t3d} worden genoemd en geplaatst in:\newline
+			\texttt{EXT:myextension/Initialisation/}
+
+		\item De import gebeurt maar \underline{een} keer\newline
+			(zelfs als de Extentie later word geherinstaleerd)
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Automatic import of files for extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51446
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Automatische bestands import}
+
+	\begin{itemize}
+		\item Extenties kunnen nu een automatisch een import initaliseren van \textbf{t3d packages} \newline
+			bij installatie van een Extentie
+		\item Bestanden worden gekopieerd naar:\newline
+			\texttt{fileadmin/<extensionkey>/}
+		\item Bestanden moeten worden geladen in:\newline
+			\texttt{EXT:myextension/Initialisation/Files/...}
+
+		\item De import gebeurt maar \underline{een} keer\newline
+			(zelfs als de Extentie later word geherinstaleerd)
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Use an extension as repository
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51835
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Gebruik een Extentie als Repository}
+
+	\begin{itemize}
+		\item Soms zijn Extenties afhaneklijk van custom versies van andere extenties of van Extenties die niet in de TER zijn te vinden
+		\item Om dit probleem op te lossen kunnen extenisies worden uitgebracht met andere Extenties
+		\item Deze moeten worden geplaatst in (unpacked):\newline
+			\texttt{EXT:myextension/Initialisation/Extensions/...}
+
+		\item Bij installatie worden deze gekopieerd naar:\newline
+			\texttt{typo3conf/ext/}
+
+		\item Hierna zijn de afhanekelijkheden van de Extentie opgelost.
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% CLI command to install/uninstall extensions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51629
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Installeer/deinstalleer Extenties via CLI}
+
+	\begin{itemize}
+		\item Installeer/deinstalleer Extenties via CLI
+		\item Voorbeeld:
+			\lstinline!typo3/cli_dispatch.phpsh extbase extension:install <extensionkey>!
+			\lstinline!typo3/cli_dispatch.phpsh extbase extension:uninstall <extensionkey>!
+
+		\item NB: een backend gebruiker \textbf{\_cli\_lowlevel} is hiervoor verplicht
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Enable/disable cascading deletion of child elements
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/50391
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Trapsgewijs verwijderen van 'Child Elementen'}
+
+	\begin{itemize}
+		\item TCA ondersteund nu een instelling om  het trapsgewijs verwijderen van 'child elements' in- of uit te schakelen
+		\item De relatie moet van het type "inline" zijn
+		\item De standaard waarde is \texttt{TRUE} (verwijderen van "inline child records" staat aan)
+		\item Voorbeeld (verwijderen van "inline child records"):
+
+			\begin{lstlisting}
+				...
+				'type' => 'inline',
+				'foreign_table' => ...,
+				  'behaviour' => array(
+				    'enableCascadingDelete' => 0
+				  )
+				  ...
+				)
+				...
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Multiple category fields per table
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51921
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Meerdere categorieen velden per tabel}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2 was het alleen mogelijk om \underline{een} \texttt{makeCategorizable()} call per tabel te maken
+			(meerdere calls zouden eerdere categorien veld declaraties overschrijven)
+		\item Sinds TYPO3 >= 6.2, meerdere categorie velden zijn mogelijk per tabel
+		\item Voorbeeld:
+
+			\begin{lstlisting}
+				\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::makeCategorizable(
+				  $extensionKey,
+				  $tableName,
+				  $fieldName = 'categories',
+				  $options = array(
+				  	'label' => 'my category'
+				  )
+				);
+			\end{lstlisting}
+
+		\item Aangepaste labels voor elk categorie veld kunnen worden ingesteld in een array \texttt{\$options}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Backend layout data providers
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/37208
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Backend Layout Data Providers}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2 werden backend layouts opgeslagen in de DB als normale records
+		\item Sinds TYPO3 >= 6.2 zogenaamde \emph{data providers} kunnen worden gedefinieerd \newline
+			\small(bijvoorbeeld om extenies het mogelijk te maken hun eigen backend layout uit te geven vanuit static files)\normalsize
+
+		\item Data providers moeten de interface implementeren:\newline
+			\smaller\texttt{
+				TYPO3\textbackslash\textbackslash
+				CMS\textbackslash\textbackslash
+				Backend\textbackslash\textbackslash
+				View\textbackslash\textbackslash
+				BackendLayout\textbackslash\textbackslash
+				DataProviderInterface}\normalsize
+
+		\item en dit kan worden geregistereerd door:
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['BackendLayoutDataProvider'][$_EXTKEY] = 'Classname';
+			\end{lstlisting}
+
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Backend layout data providers
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/37208
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Backend Layout Data Providers}
+
+	\begin{itemize}
+		\item Nieuwe API functies voor het gebruiken van de backend layout data providers:
+
+			\begin{lstlisting}
+				'itemsProcFunc' => 'TYPO3\\CMS\\Backend\\View\\
+				  BackendLayoutView->addBackendLayoutItems'
+			\end{lstlisting}
+
+			\begin{lstlisting}
+				getBackendLayoutView()->getSelectedCombinedIdentifier($id);
+				getBackendLayoutView()->getSelectedBackendLayout();
+			\end{lstlisting}
+
+		\item Nieuwe PageTSconfig optie om backend layouts te excluden:
+
+			\begin{lstlisting}
+				options.backendLayout.exclude = default_1, my_extension__headerLayout
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Filter for multiple value selector
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49739
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Multiple Value Selector (1)}
+
+	\begin{itemize}
+		\item Filter beschikbare items in een 'multi-select' element (d.m.v. TCA instellingen )
+		\item Bijvoorbeeld: maak een text-veld beschikbaar voor het individueel filteren van woorden en het definieren van zoek worden die een gebruiker kan selecteren via een dropdown box
+
+		\item Om dit te gebruiken, pas de TCA als volgt aan\newline
+			(zoals in bestand \texttt{typo3conf/extTables.php}):
+
+			\lstset{
+				basicstyle=\tiny\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TCA']['fe_users']['columns']['usergroup']['config']
+				  ['enableMultiSelectFilterTextfield'] = TRUE;
+				$GLOBALS['TCA']['fe_users']['columns']['usergroup']['config']
+				  ['multiSelectFilterItems'] = array(
+
+				  // no filter
+				  array('', 'show all'),
+
+				  // first value: filter, second value: label
+				  array('News', 'News'),
+				);
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Filter for multiple value selector
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49739
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Multiple Value Selector (2)}
+
+	Het resultaat lijk dan hierop:
+
+	\begin{figure}
+		\includegraphics[width=0.9\linewidth,height=4cm]{Images/Dummy_1640x470.png}
+	\end{figure}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49037 (Custom record list in element browser)
+% http://forge.typo3.org/issues/36505 (Increase size of be_groups.subgroup field)
+% http://forge.typo3.org/issues/49270 (Merge extensions TS/Template)
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Diversen}
+
+	\begin{itemize}
+
+		\item \textbf{Custom record lijst:}\newline
+			\small
+				Een 'custom record list' instantie kan in de element browser worden gebruikt om een de standaard element browser record lijst te overschrijven
+			\normalsize
+
+		\item \textbf{Meer subgroepen:}\newline
+			\small
+				Attribuut \texttt{subgroep} in DB tabel \texttt{be\_groups} veranderd van\texttt{varchar(250)} naar \texttt{text}, wat veel meer subgroepen toestaat (backend gebruikers/groepen)
+			\normalsize
+
+		\item \textbf{Extentie TS/Template samengevoegd:}\newline
+			\small
+				Technisch gezien, "WEB > Template" was verspreid onder meerdere Extenties (tstemplate\_ceditor, tstemplate\_info,
+tstemplate\_objbrowser en tstemplate\_analyzer). Al deze Extenties zijn nu samengevoegd in een Extentie: "tstemplate"
+			\normalsize
+
+	\end{itemize}
+	
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49721 (Add label_userFunc_options support to BackendUtility)
+% http://forge.typo3.org/issues/50441 (Add a timestamp when downloading an extension)
+% http://forge.typo3.org/issues/51352 (Force saltedpasswords for Backend)
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Diversen}
+
+	\begin{itemize}
+
+		\item \textbf{label\_userFunc\_option:}\newline
+			\small
+				Support van \texttt{label\_userFunc\_options} toegevoegd aan \texttt{BackendUtility}
+			\normalsize
+
+		\item \textbf{Extension filename:}\newline
+			\small
+				Wanneer je een Extentie download via de Extentiemanager, de bestandsnaam bevat een timestamp (jaar, maand, dag en tijd):\newline
+				\texttt{<extensionKey>\_<version>\_<timestamp>.zip}\newline
+				\texttt{myextension\_1.0.0\_201312102359.zip}
+			\normalsize
+
+		\item \textbf{EXT:saltedpasswords:}\newline
+			\small
+				Extentie EXT:saltedpasswords is een verplichte systeem Extentie en staat standaard geinstalleerd vanaf nu.
+				Dit zorgt ervoor dat salted hashes worden geforceerd voor backend authenticatie. De InstallTool controleerd deze instellingen en neemt hem over wanneer dit nodig is.
+			\normalsize
+
+	\end{itemize}
+	
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51138 (Allow SignalSlots to modify arguments)
+% http://forge.typo3.org/issues/31996 (Transfer query parameters in preview)
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Diversen}
+
+	\begin{itemize}
+
+		\item \textbf{SignalSlots om argumenten aan te passen:}\newline
+			\small
+				Arugementen doorgegeven aan de SignalSlots dispatcher kunnen worden aangepast en de dispatcher geeft de (aangepaste) argumenten terug zoals die zijn ontvangen om de 'chaining' intact te houden.
+			\normalsize
+
+		\item \textbf{Workspace preview:}\newline
+			\small
+				Query parameters worden doorgegeven aan de workspace preview. Dit was een problmeen in TYPO3 < 6.2, daar werkte het doorgeven van aangepaste parameters niet goed in extenties.
+			\normalsize
+
+	\end{itemize}
+	
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/14730 (Support for proxy NTLM authentication)
+% http://forge.typo3.org/issues/49667 (Enable double-resolution icons in SpriteGenerator)
+
+\begin{frame}[fragile]
+	\frametitle{Diepgaande veranderingen}
+	\framesubtitle{Diversen}
+
+	\begin{itemize}
+
+		\item \textbf{Double-resolution icons:}\newline
+			\small
+				SpriteManager ondersteunt hoge resolutie iconen vanaf nu: het generereerd een tweede sprite met 2x grotere iconen(een tweede bestand met "@x2.png" suffix). CSS3 zorgt ervoor dat het hoge resolutie bestand wordt geladen op aparaten die dit ondersteunen\newline
+				(dit heeft geen effect op de performance op andere apparaten).
+			\normalsize
+
+% *TODO* line height of the following item seems to be different compared to the point above. Why?
+		\item \textbf{Proxy NTLM authenticatie:}\newline
+			\small
+				Ondersteuning voor proxy NTLM authenticatie (\textbf{NT} \textbf{L}AN \textbf{M}anager: een pakket van Microsoft security protocollen) toegevoegd. Deze feature kan worden geactiveerd in de Install Tool:\newline
+				\newline
+				\texttt{\$GLOBALS['TYPO3\_CONF\_VARS']['SYS']['curlProxyNTLM']}\newline
+				\newline
+				\smaller
+				\emph{(nog even dit: deze functie was al 8 jaar geleden aangevraagd :-)}
+
+			\normalsize
+
+	\end{itemize}
+	
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

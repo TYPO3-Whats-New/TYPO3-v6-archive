@@ -1,0 +1,601 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Extbase & Fluid" (Serbian Version)
+%
+% @author	Sinisa Mitrovic <mitrovic.sinisaa@gmail.com>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Serbian
+% ------------------------------------------------------------------------------
+% Chapter: Extbase & Fluid
+% ------------------------------------------------------------------------------
+
+\section{Extbase i Fluid}
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+
+	\begin{center}\huge{Poglavlje 8:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Extbase i Fluid}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ObjectManager->getScope()
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48766
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ObjectManager->getScope()}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Metod \texttt{ObjectManager->getScope()} proverava,\newline
+			da li je tip klase \textbf{prototype} ili \textbf{singleton}
+
+			\begin{lstlisting}
+				/**
+				 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+				 * @inject
+				 */
+				protected $objectManager;
+
+				$this->objectManager->getScope($propertyTargetClassName) === \TYPO3\CMS
+				\Extbase\Object\Container\Container::SCOPE_PROTOTYPE
+
+				$this->objectManager->getScope($propertyTargetClassName) === \TYPO3\CMS
+				\Extbase\Object\Container\Container::SCOPE_SINGLETON
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Page type for URIs with format
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/27498
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Tip strane za URI}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Page type atribut vise nije neophodan u linkovima kada se rendera specijalni format
+
+			\smaller\textbf{TYPO3 < 6.2:}\normalsize
+			\begin{lstlisting}
+				<f:link.action arguments="{blog: blog}" pageType="{settings.plaintextPageType}"
+				  format="txt">[plaintext]</f:link.action></li>
+			\end{lstlisting}
+
+		\item Nova opcija u TypoScript-u \texttt{formatToPageTypeMapping} dozvoljava globalno mapiranje:
+
+			\begin{lstlisting}
+				plugin.tx_myextension {
+				  view.formatToPageTypeMapping {
+				    txt = 99
+				    pdf = 123
+				  }
+				}
+			\end{lstlisting}
+
+			\smaller\textbf{TYPO3 >= 6.2:}\normalsize
+			\begin{lstlisting}
+				<f:link.action arguments="{blog: blog}"
+				  format="txt">[plaintext]</f:link.action></li>
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Object Type Converter
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48548
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Object Type Converter (1)}
+
+	\begin{itemize}
+		\item Mapira izvore nizova na neperzistentne objekte
+		\item Koristan kada Vam treba prelazni objekat iz argumenata 
+		\item Primeri su na sledecim slajdovima...
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Object Type Converter
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48548
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Object Type Converter (2)}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\smaller\textbf{GET request}\normalsize
+	\begin{lstlisting}
+		http://example.com/index.php?id=299
+		  &tx_myextension[action]=list
+		  &tx_myextension[controller]=Entity
+		  &tx_myextension[demand][title]=foo
+		  &tx_myextension[demand][relation]=1
+	\end{lstlisting}
+
+	\smaller\textbf{Entity controller: \texttt{initializeListAction()}}\normalsize
+	\begin{lstlisting}
+		use [Vendor]\myextension\Domain\Dto\Demand;
+		public function initializeListAction() {
+		  /**
+		   * @var PropertyMappingConfiguration $demandConfiguration
+		   */
+		  $demandConfiguration = $this->arguments['demand']->getPropertyMappingConfiguration();
+		  $demandConfiguration->allowAllProperties()->forProperty('relation')->allowAllProperties()->
+		    setTypeConverterOption(
+		      'TYPO3\\CMS\\Extbase\\Property\\TypeConverter\\PersistentObjectConverter',
+		      PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED,
+		      TRUE
+		  );
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Object Type Converter
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48548
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Object Type Converter (3)}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\smaller\textbf{Entity controller: \texttt{listAction()}}\normalsize
+	\begin{lstlisting}
+		use [Vendor]\myextension\Domain\Dto\Demand;
+		/**
+		 * @var PropertyMappingConfiguration $demandConfiguration
+		 */
+		public function listAction(Demand $demand = NULL) {
+		  $entities = $this->entityRepository->findAll();
+		  $this->view->assign('entities', $entities);
+		}
+	\end{lstlisting}
+
+	\smaller\textbf{Model: \texttt{[Vendor]\textbackslash myextension\textbackslash Domain\textbackslash Dto\textbackslash Demand.php}}\normalsize
+	\begin{lstlisting}
+		namespace [Vendor]\myextension\Domain\Dto;
+		use [Vendor]\myextension\Domain\Model\Relation;
+		class Demand {
+		  protected $relation;
+		  /**
+		   * @param \TYPO3Friends\MapperExample\Domain\Model\Relation $relation
+		   */
+		  public function setRelation($relation) {
+		    $this->relation = $relation;
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Chaining of set* functions
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/47684
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Izmene na set* funkcijama}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item \texttt{set*} metode mogu biti  \emph{uvezane} sa QuerySettings API-jem
+		\item IUkljucuje nove opcije koje su prvi put uvedene sa TYPO3 CMS 6.0:\newline
+			\texttt{setIncludeDeleted} i \texttt{setIgnoreEnableFields}
+
+			\begin{lstlisting}
+				$query->getQuerySettings()
+				  ->setRespectStoragePage(FALSE)
+				  ->setRespectSysLanguage(FALSE)
+				  ->setIgnoreEnableFields(TRUE)
+				  ->setIncludeDeleted(TRUE);
+			\end{lstlisting}
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% returnRawQueryResult as argument
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/51145
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{returnRawQueryResult kao argument}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Raw query result vise nije centralni metod,\newline
+			vec argument u metodu: \texttt{execute()}
+			\newline
+
+			\smaller\textbf{TYPO3 < 6.2:}\normalsize\newline
+			\lstinline!$query->getQuerySettings()->setReturnRawQueryResult(TRUE);!
+			\newline
+
+			\smaller\textbf{TYPO3 >= 6.2:}\normalsize\newline
+			\lstinline!$query->execute(TRUE);!
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Recursive validation
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/6893
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Rekurzivna validacija}
+
+	\begin{itemize}
+		\item Extbase sada koristi rekurzivnu validaciju (poznatu iz TYPO3 Flow)
+		\item Ovo znaci da kada preko Property-Mapper-a napravite ugnezdene objekte,
+			objekti u osobinama , kao i spoljni objekti se validiraju\newline
+			(u TYPO3 CMS < 6.2, samo se ppoljni objekti validiraju)
+		\item Dodatno, validatori sada dozvoljavaju prazne vrednosti
+	\end{itemize}
+
+	\breakingchange
+
+	\smaller\begin{center} Da biste napravili neophodnu osobinu, \underline{morate} da dodate eksplicitno \textbf{NotEmptyValidator}!\end{center}\normalsize
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Application Context
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49988
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Kontekst aplikacije}
+
+	\begin{itemize}
+		\item Pristup trenutnom kontekstu aplikacije u Extbase-u\newline
+			(postavljena kao promenjiva okruzenja \texttt{TYPO3\_CONTEXT} ili u Install Tool-u)\newline
+
+			\lstinline!\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->getContext();!
+			\lstinline!\TYPO3\CMS\Core\Utility\GeneralUtility::getContext();!
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: Image
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/47552
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelper: image}
+
+	\begin{itemize}
+		\item Fluid ViewHelper \textbf{image} sa opcionim \texttt{title} atributom\newline
+
+			\smaller\textbf{Primer:}\normalsize\newline
+			\lstinline!<f:image src="background.jpg" alt="Text" />!
+			\newline
+
+			\smaller\textbf{TYPO3 < 6.2:}\normalsize\newline
+			\lstinline!<img src="background.jpg" alt="Text" title="Text" />!
+			\newline
+
+			\smaller\textbf{TYPO3 >= 6.2:}\normalsize\newline
+			\lstinline!<img src="background.jpg" alt="Text" />!
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: textfield and textarea
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/45960
+% http://forge.typo3.org/issues/48689 (Added autofocus attribute to textfield and textarea)
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelpers: textfield i textarea}
+
+	\begin{itemize}
+		\item Argumenti \texttt{autofocus} i \texttt{placeholder} (validni HTML5 argumenti) za Fluid ViewHelper-e \textbf{form.textarea} i \textbf{form.textfield}\newline
+
+			\smaller\textbf{Primer ("placeholder"):}\normalsize
+			\begin{lstlisting}
+				<f:form.textfield
+				  id="powermail_field_{field.marker}"
+				  ...
+				  placeholder="{field.title -> vh:string.RawAndRemoveXss()}"
+				  ...
+				  name="field[{field.uid}]"
+				  required="{field.mandatory}" />
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: switch
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48653
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelper: switch}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Novi Fluid ViewHelper \textbf{switch} rendera sadrzaj u zavisnosti od zadate vrednosti ili izraza
+		\item Ponasa se slicno kao \texttt{switch()} u PHP-u
+
+			\begin{lstlisting}
+				<f:switch expression="{person.gender}">
+				  <f:case value="male">Mr.</f:case>
+				  <f:case value="female">Mrs.</f:case>
+				  <f:case default="TRUE">Mrs. or Mr.</f:case>
+				</f:switch>
+			\end{lstlisting}
+
+		\item \textbf{\underline{Napomena:}} prevelika upotreba ovog ViewHelper-a je indikator loseg dizajna. Primer od gore moze da se napise i sa parsalima "\texttt{title.male.html}" i "\texttt{title.female.html}" na ovaj nacin:
+
+			\begin{lstlisting}
+				<f:render partial="title.{person.gender}" />
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: fileSize
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49139
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelper: fileSize}
+
+	\begin{itemize}
+		\item Konvertuje velicinu fajla (integer) u ljudima citljiv string\newline
+	\end{itemize}
+
+	\begin{columns}[T]
+
+		\begin{column}{.5\textwidth}
+			\advance\leftskip+0.8cm
+			\smaller
+				\textbf{Primer 1} (fileSize = 1263616):\newline
+				\texttt{fileSize -> f:format.bytes()}\newline
+				\newline
+				Ispis: "1234 KB"
+			\normalsize
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\smaller
+				\textbf{Primer 2} (fileSize = 1263616):\newline
+				\texttt{fileSize -> f:format.bytes(}\newline
+				\texttt{
+				decimals: 2,\newline
+				decimalSeparator: '.',\newline
+				thousandsSeparator: ','\newline
+				)}\newline
+				\newline
+				Ispis: "1,234.00 KB"
+			\normalsize
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: format.date
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelper: format.date}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Podrazumevana vrednost ViewHelper-a \textbf{format.date} je vrednost koja je konfigurisana u Install Tool-u
+
+			\lstinline!$GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']!
+
+		\item Ako vrednost nije konfigurisana, "\texttt{Y-m-d}" se koristi (godina, mesec, dan)
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: Backend Container
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49749
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelper: Backend Container}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Fluid ViewHelper backend container (\texttt{be.container}) je preradjen:\newline
+			\smaller\texttt{typo3/sysext/fluid/Classes/ViewHelpers/Be/ContainerViewHelper.php}\normalsize\newline
+
+			\smaller\textbf{Zastarelo:}\normalsize
+			\begin{itemize}
+				\item \texttt{\$addCssFile} (use \texttt{\$includeCssFiles} instead)
+				\item \texttt{\$addJsFile} (use \texttt{\$includeJsFiles} instead)
+			\end{itemize}
+
+			\smaller\textbf{Novo:}\normalsize
+			\begin{itemize}
+				\item \texttt{\$loadJQuery}
+				\item \texttt{\$includeCssFiles}
+				\item \texttt{\$includeJsFiles}
+				\item \texttt{\$addJsInlineLabels}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% ViewHelper: button.icon
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{ViewHelper: button.icon}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Fluid ViewHelper \textbf{button.icon} je zavrsen (bio je "experimental")
+		\item Kreira ikonicu dugmeta (opciono sa linkom)
+
+			\begin{lstlisting}
+				<f:be.buttons.icon uri="{f:uri.action(action:'new')}"
+				  icon="actions-document-new" title="Create new Foo" />
+
+				<f:be.buttons.icon
+				  icon="actions-document-new" title="Create new Foo" />
+			\end{lstlisting}
+
+		\item Atribut \texttt{icon} prihvata vise od 310 vrednosti!\newline
+
+			\smaller
+				Trazite:\newline
+				\texttt{\$GLOBALS['TBE\_STYLES']['spriteIconApi']['coreSpriteImageNames']}\newline
+				...u fajlu:\newline
+				\texttt{typo3/systext/core/ext\_tables.php}
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Option addQueryStringMethod
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/11441
+% http://forge.typo3.org/issues/35281
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Opcija addQueryStringMethod}
+
+	\begin{itemize}
+		\item Opcija \texttt{addQueryString} podrzava samo \textbf{GET}-argumente \newline
+			\small(koji se onda dodaju u generisani link)\normalsize
+		\item Ova opcija ne radi sa \textbf{POST}-argumentima (iz Widget-a) 
+		\item Nova opcija \texttt{addQueryStringMethod} resava ovaj problem i dozvoljava da se definise koji metodi se uzimaju u obzir:\newline
+			GET (podrazumevan), POST, GET/POST ili POST/GET
+		\item Ovi Fluid ViewHelper-i podrzava ovu novu opciju:
+
+			\begin{itemize}\smaller
+				\item \texttt{link.action}
+				\item \texttt{link.page}
+				\item \texttt{uri.action}
+				\item \texttt{uri.page}
+				\item \texttt{widget.link}
+				\item \texttt{widget.uri}
+				\item \texttt{widget.paginate}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Fluid: Fallback path for templates
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Extbase i Fluid}
+	\framesubtitle{Fluid: Rezervna putanja za sablone}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Fluid sada podrzava "rezervne" putanje za sablone, parsale i lejaute::\newline
+			\smaller\texttt{templateRootPaths}, \texttt{partialRootPaths}, \texttt{layoutRootPaths}\normalsize
+		\item Krece se od najveceg indeksa, pa se zatim prolazi kroz sve manje indekse dok se ne nadje sablon
+
+			\begin{lstlisting}
+				plugin.tx_myextension {
+				  view {
+				    templateRootPath = EXT:myextension/Resources/Private/Templates/
+				  }
+				}
+
+				plugin.tx_myextension {
+				  view {
+				    templateRootPath >
+				    templateRootPaths {
+				      10 = fileadmin/myextension/Templates/
+				      20 = EXT:myextension/Resources/Private/Templates/
+				    }
+				  }
+				}
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

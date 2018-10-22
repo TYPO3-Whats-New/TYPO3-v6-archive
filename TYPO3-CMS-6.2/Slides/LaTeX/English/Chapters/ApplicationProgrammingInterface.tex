@@ -1,0 +1,368 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Application Programming Interface" (English Version)
+%
+% @author	Michael Schams <schams.net>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	English
+% ------------------------------------------------------------------------------
+% Chapter: Application Programming Interface
+% ------------------------------------------------------------------------------
+
+\section{Application Programming Interface}
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+
+	\begin{center}\huge{Chapter 7:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Application Programming Interface (API)}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: tsfe::checkEnableFields
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48981
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook: \texttt{tsfe::checkEnableFields}}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2, "\emph{extend to subpages}" can not be used in own extensions that provide additional rules for page visibility\newline
+			\small(list of fields to check is hard-coded in \texttt{tsfe::checkEnableFields()})\normalsize
+
+		\item In TYPO3 >= 6.2, a new hook allows extensions to provide additional rules for page visibility when parent pages have "extend to subpages" activated.
+		\item Class:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Frontend\textbackslash
+					Controller\textbackslash
+					TypoScriptFrontendController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['tslib/class.tslib_fe.php']['hook_checkEnableFields']
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: checkFlexFormValue in DataHandler
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49699
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook: \texttt{checkFlexFormValue} in DataHandler}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2, when updating Flexform values, there is no check if an existing value in the database has actually been deleted
+		\item This became a problem, e.g. when saving switchable controller actions (Extbase) in the Flexform: old actions that may not be present any longer have to be removed manually
+
+		\item In TYPO3 >= 6.2, a new hook allows to adjust the old Flexform data right before it is merged with the new one
+		\item Class:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Core\textbackslash
+					DataHandling\textbackslash
+					DataHandler}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['t3lib/class.t3lib_tcemain.php']['checkFlexFormValue']
+			\end{lstlisting}
+
+		\item Method:\newline
+			\smaller
+				\texttt{checkFlexFormValue\_beforeMerge()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook to customize header in module "Web > Page"
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/52579
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook to customize header}
+
+	\begin{itemize}
+		\item In TYPO3 >= 6.2, a new hook allows modifying the header of a page in the page module (Module: "Web > Page")
+		\item This hook is called before the content of the page is rendered
+		\item Class:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Backend\textbackslash
+					Controller\textbackslash
+					PageLayoutController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['cms/layout/db_layout.php']['drawHeaderHook']
+			\end{lstlisting}
+
+		\item Method:\newline
+			\smaller
+				\texttt{callUserFunction()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% IRRE: Provide default values for created records
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{IRRE: default values for created records}
+
+	\begin{itemize}
+		\item New TCA option allows to configure "inline" fields
+		\item Key \texttt{foreign\_record\_defaults} allows to set (default) values in new created records
+
+			\begin{lstlisting}
+				'config' => array(
+				  'type' => 'inline',
+				  'foreign_table' => 'tt_content',
+				  'foreign_record_defaults' => array(
+				    'CType' => 'image'
+				  ),
+				)
+			\end{lstlisting}
+
+			\small
+				Example above: \texttt{tt\_content} elements that are created for this IRRE field will be \textbf{image content elements} by default. Editor can set this to another type before saving.
+			\normalsize
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (1)}
+
+	\begin{itemize}
+		\item In TYPO3 < 6.2, module "Workspaces" can be extended by overriding PHP and JavaScript components only
+		\item In TYPO3 >= 6.2, it is now possible to extend the definition and behaviour of displayed columns in the module
+		\item Some examples on the following slides...
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (2)}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	Example (file \texttt{ext\_localconf.php}):
+
+	\begin{lstlisting}
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+		  ['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['workspaces_logger'] =
+		  'Vendor\\WorkspacesLogger\\Hook\\DataHandlerHook';
+	\end{lstlisting}
+
+	Example (file \texttt{ext\_tables.php}):
+
+	\begin{lstlisting}
+		\TYPO3\CMS\Workspaces\Service\AdditionalColumnService::getInstance()->register(
+		  'WorkspacesLogger_StageChange',
+		  'Vendor\\WorkspacesLogger\\DataProvider'
+		);
+
+		\TYPO3\CMS\Workspaces\Service\AdditionalResourceService::getInstance()->addJavaScriptResource(
+		  'WorkspacesLogger',
+		  'EXT:myextension/Resources/Public/JavaScript/StageChange.js'
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (3)}
+
+	Example (file \texttt{Vendor\textbackslash
+		WorkspacesLogger\textbackslash
+		Hook\textbackslash
+		DataHandlerHook}):
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		<?php
+		namespace Vendor\WorkspacesLogger\Hook;
+		use TYPO3\CMS\Core\SingletonInterface;
+
+		class DataHandlerHook implements SingletonInterface {
+
+		  const TABLE_Name = 'tx_workspaceslogger_event';
+		  const EVENT_SetStage = 91;
+
+		  /**
+		   * hook that is called when no prepared command was found
+		   */
+		  public function processCmdmap($command, $table, $id, $value, &$commandIsProcessed,
+		    \TYPO3\CMS\Core\DataHandling\DataHandler $tcemainObj) {
+		    ...
+		    $action = (string) $value['action'];
+		    if ($command === 'version' && $action === 'setStage' && $commandIsProcessed) {
+		      ...
+		    }
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% PSR-3 compatible Logger
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48880
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{PSR-3 compatible Logger}
+
+	\begin{itemize}
+		\item The TYPO3 CMS 6.2 logging API is now PSR-3 compatible
+		\item PSR-3 aims to set a standard for logging in PHP (standard of the PHP Framework Interop Group)
+
+		\item The main goal of PSR-3 is
+			"\emph{to allow libraries to receive a LoggerInterface object and write logs to it in a simple and universal way.}"
+
+		\item Logger interface contains shorthand log methods such as\newline
+			\texttt{debug()}, \texttt{warning()}, \texttt{notice()}, \texttt{alert()}, \texttt{error()}, etc.
+
+		\item Further resources:\newline
+			\url{http://www.php-fig.org/psr/3/}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% API to CSRF protect Ajax calls in Backend
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/56345
+% http://forge.typo3.org/issues/56347 (documentation)
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{CSRF Protected Ajax Calls}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Ajax calls in the TYPO3 backend can be protected against CSRF (\textit{cross-site request forgery}) by registering their handlers
+
+			\begin{lstlisting}
+				\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerAjaxHandler(
+				  'TxMyExt::process',
+				  '\Vendor\MyExt\AjaxHandler->process'
+				);
+			\end{lstlisting}
+
+		\item URL for a given Ajax ID contains a CSRF protection token, which will be checked in the \texttt{ajax.php} dispatcher
+
+			\begin{lstlisting}
+				$ajaxUrl = \TYPO3\CMS\Core\Utility\BackendUtility::getAjaxUrl('TxMyExt::process');
+			\end{lstlisting}
+
+		\item These settings can then be accessed in the JavaScript context of the page
+
+			\begin{lstlisting}
+				var ajaxUrl = TYPO3.settings.MyExt.ajaxUrl;
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49144 (MathUtility: Add canBeInterpretedAsFloat)
+% http://forge.typo3.org/issues/52707 (Introduce a PHP Enumeration type)
+% http://forge.typo3.org/issues/52762 (Add type converter for core types like Enumeration)
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Miscellaneous}
+
+	\begin{itemize}
+		\item New method \texttt{canBeInterpretedAsFloat()} in class: \texttt{MathUtility}\newline
+			\small(This is an analogue of: \texttt{canBeInterpretedAsInteger()})\normalsize
+		\item New enumeration type (without a relation to 3rd party PHP modules):\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Type\textbackslash
+				Enumeration}\newline
+
+			For example used in:\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Versioning\textbackslash
+				VersionState}\newline
+
+			...and then as:\newline
+			\texttt{new VersionState(VersionState::DEFAULT\_STATE);}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

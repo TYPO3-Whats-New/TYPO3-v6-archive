@@ -1,0 +1,368 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Application Programming Interface" (Serbian Version)
+%
+% @author	Sinisa Mitrovic <mitrovic.sinisaa@gmail.com>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	Serbian
+% ------------------------------------------------------------------------------
+% Chapter: Application Programming Interface
+% ------------------------------------------------------------------------------
+
+\section{Application Programming Interface}
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+
+	\begin{center}\huge{Poglavlje 7:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Application Programming Interface (API)}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: tsfe::checkEnableFields
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48981
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook: \texttt{tsfe::checkEnableFields}}
+
+	\begin{itemize}
+		\item U TYPO3 < 6.2, "\emph{extend to subpages}" se ne moze koristiti u prosirenjima koja imaju dodatna pravila o vidljivosti strane\newline
+			\small(lista polja koja se mogu cekirati su kodovana u \texttt{tsfe::checkEnableFields()})\normalsize
+
+		\item U TYPO3 >= 6.2, novi hook omogucava porsirenjima da dodaju nova pravila koja se ticu vidljivosti strane, onda kada nadstrana ima aktivirano "extend to subpages"
+		\item Klasa:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Frontend\textbackslash
+					Controller\textbackslash
+					TypoScriptFrontendController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['tslib/class.tslib_fe.php']['hook_checkEnableFields']
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook: checkFlexFormValue in DataHandler
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49699
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook: \texttt{checkFlexFormValue} u DataHandler-u}
+
+	\begin{itemize}
+		\item U TYPO3 < 6.2 kada se azuriraju vrednosti iz Flexform-e ne postoji provera da li je postojeca vrednost u bazi podataka zapravo obrisana.
+		\item Ovo postaje problem, npr. pri pokusaju snimanja switchable controller actions (Extbase) u Flexform-i: stare akcije koje mozda vise nisu prisutne morale su se ukloniti rucno
+
+		\item U TYPO3 >= 6.2 novi hook dozvoljava da se podaci stare Flexform-e prilagode pre nego sto se integrisu sa novim
+		\item Klasa:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Core\textbackslash
+					DataHandling\textbackslash
+					DataHandler}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['t3lib/class.t3lib_tcemain.php']['checkFlexFormValue']
+			\end{lstlisting}
+
+		\item Metoda:\newline
+			\smaller
+				\texttt{checkFlexFormValue\_beforeMerge()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Hook to customize header in module "Web > Page"
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/52579
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Hook za prilagodjavanje zaglavlja}
+
+	\begin{itemize}
+		\item U TYPO3 >= 6.2 novi hook dozvoljava modifikovanje zaglavlja strane u page modulu (Module: "Web > Page")
+		\item Ovaj hook se poziva pre nego sto se izrendera sadrzaj strane
+		\item Klasa:\newline
+			\smaller
+				\texttt{\textbackslash
+					TYPO3\textbackslash
+					CMS\textbackslash
+					Backend\textbackslash
+					Controller\textbackslash
+					PageLayoutController}\normalsize
+
+			\lstset{
+				basicstyle=\smaller\ttfamily
+			}
+
+			\begin{lstlisting}
+				$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+				  ['cms/layout/db_layout.php']['drawHeaderHook']
+			\end{lstlisting}
+
+		\item Metoda:\newline
+			\smaller
+				\texttt{callUserFunction()}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% IRRE: Provide default values for created records
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{IRRE: osnovne vrednosti za napravljene zapise}
+
+	\begin{itemize}
+		\item Novi TCA omogucava konfigurisanje "inline" polja
+		\item Kljuc \texttt{foreign\_record\_defaults} dozvoljava da (osnovne) vrednosti budu postavljene u novokreiranom zapisu
+
+			\begin{lstlisting}
+				'config' => array(
+				  'type' => 'inline',
+				  'foreign_table' => 'tt_content',
+				  'foreign_record_defaults' => array(
+				    'CType' => 'image'
+				  ),
+				)
+			\end{lstlisting}
+
+			\small
+				Primer iznad: \texttt{tt\_content} elementi kreirani za ovo IRRE polje ce biti \textbf{image content elements}. Urednik moze podesiti neki drugi tip pre snimanja.
+			\normalsize
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (1)}
+
+	\begin{itemize}
+		\item U TYPO3 < 6.2 modul workspace mogao se prosiriti samo ukoliko se pregaze PHP i JavaScript komponente
+		\item U TYPO3 >= 6.2 sada je moguce prosiriti definisanost i ponasanje prikazanih kolona u modulu
+		\item Neki od primera su na sledecim slajdovima...
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (2)}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	Primer (fajl \texttt{ext\_localconf.php}):
+
+	\begin{lstlisting}
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']
+		  ['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['workspaces_logger'] =
+		  'Vendor\\WorkspacesLogger\\Hook\\DataHandlerHook';
+	\end{lstlisting}
+
+	Primer (fajl \texttt{ext\_tables.php}):
+
+	\begin{lstlisting}
+		\TYPO3\CMS\Workspaces\Service\AdditionalColumnService::getInstance()->register(
+		  'WorkspacesLogger_StageChange',
+		  'Vendor\\WorkspacesLogger\\DataProvider'
+		);
+
+		\TYPO3\CMS\Workspaces\Service\AdditionalResourceService::getInstance()->addJavaScriptResource(
+		  'WorkspacesLogger',
+		  'EXT:myextension/Resources/Public/JavaScript/StageChange.js'
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Workspaces
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/46124
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Workspaces (3)}
+
+	Primer (fajl \texttt{Vendor\textbackslash
+		WorkspacesLogger\textbackslash
+		Hook\textbackslash
+		DataHandlerHook}):
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		<?php
+		namespace Vendor\WorkspacesLogger\Hook;
+		use TYPO3\CMS\Core\SingletonInterface;
+
+		class DataHandlerHook implements SingletonInterface {
+
+		  const TABLE_Name = 'tx_workspaceslogger_event';
+		  const EVENT_SetStage = 91;
+
+		  /**
+		   * hook that is called when no prepared command was found
+		   */
+		  public function processCmdmap($command, $table, $id, $value, &$commandIsProcessed,
+		    \TYPO3\CMS\Core\DataHandling\DataHandler $tcemainObj) {
+		    ...
+		    $action = (string) $value['action'];
+		    if ($command === 'version' && $action === 'setStage' && $commandIsProcessed) {
+		      ...
+		    }
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% PSR-3 compatible Logger
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/48880
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Kompatabilni PSR-3 Logger}
+
+	\begin{itemize}
+		\item TYPO3 CMS 6.2 API za kreiranje logova sada je PSR-3 kompatabilan
+		\item PSR-3 ima za cilj da napravi standard za belezenje logova u PHP-u (standard za PHP Framework Interop Group)
+
+		\item Glavni zadatak PSR-3 je
+			"\emph{omoguciti da biblioteke sadrze LoggerInterface objekte, kako bi se logovi zapsivali na jednostavan i univerzalan nacin}"
+
+		\item Logger interfejs sadrzi kratke log metode kao sto su\newline
+			\texttt{debug()}, \texttt{warning()}, \texttt{notice()}, \texttt{alert()}, \texttt{error()}, etc.
+
+		\item Dodatne informacije:\newline
+			\url{http://www.php-fig.org/psr/3/}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% API to CSRF protect Ajax calls in Backend
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/56345
+% http://forge.typo3.org/issues/56347 (documentation)
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{CSRF zasticeni Ajax pozivi}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{itemize}
+		\item Ajax pozivi u TYPO3 administratorskom panelu mogu se zastititi od CSRF (\textit{cross-site request forgery}) ako se registruju njihovi hendleri
+
+			\begin{lstlisting}
+				\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerAjaxHandler(
+				  'TxMyExt::process',
+				  '\Vendor\MyExt\AjaxHandler->process'
+				);
+			\end{lstlisting}
+
+		\item URL za dati Ajax ID sadrzi CSRF zastitni token, koji ce biti proveren od strane \texttt{ajax.php} dispecera
+
+			\begin{lstlisting}
+				$ajaxUrl = \TYPO3\CMS\Core\Utility\BackendUtility::getAjaxUrl('TxMyExt::process');
+			\end{lstlisting}
+
+		\item Ovim podesavanjima se moze pristupiti u JavaScript context-u strane
+
+			\begin{lstlisting}
+				var ajaxUrl = TYPO3.settings.MyExt.ajaxUrl;
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+% http://forge.typo3.org/issues/49144 (MathUtility: Add canBeInterpretedAsFloat)
+% http://forge.typo3.org/issues/52707 (Introduce a PHP Enumeration type)
+% http://forge.typo3.org/issues/52762 (Add type converter for core types like Enumeration)
+
+\begin{frame}[fragile]
+	\frametitle{Application Programming Interface}
+	\framesubtitle{Razno}
+
+	\begin{itemize}
+		\item Nova metoda \texttt{canBeInterpretedAsFloat()} u klasi: \texttt{MathUtility}\newline
+			\small(analogno metodi: \texttt{canBeInterpretedAsInteger()})\normalsize
+		\item Novi tip za nabrajanje (nije u relaciji sa nekim drugim PHP modulima):\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Type\textbackslash
+				Enumeration}\newline
+
+			Na primer korisceno kod:\newline
+			\texttt{\textbackslash
+				TYPO3\textbackslash
+				CMS\textbackslash
+				Core\textbackslash
+				Versioning\textbackslash
+				VersionState}\newline
+
+			...a zatim kao:\newline
+			\texttt{new VersionState(VersionState::DEFAULT\_STATE);}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

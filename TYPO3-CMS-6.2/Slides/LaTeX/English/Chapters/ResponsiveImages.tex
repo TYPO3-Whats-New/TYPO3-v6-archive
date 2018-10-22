@@ -1,0 +1,320 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Responsive Images" (English Version)
+%
+% @author	Michael Schams <schams.net>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	English
+% ------------------------------------------------------------------------------
+% Chapter: Responsive Images
+% ------------------------------------------------------------------------------
+
+\section{Responsive Images}
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+
+	\begin{center}\huge{Chapter 2:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Responsive Images}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Select Screen Size In Page Preview
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Select Screen Size In Page Preview}
+
+	\begin{itemize}
+		\item Editors can select various screen sizes in module "View" to test responsive sites
+	\end{itemize}
+
+	\begin{figure}
+		\includegraphics[width=0.95\linewidth]{Images/ResponsiveImages/ScreenSizeInPagePreview.png}
+	\end{figure}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Customize Available Screen Sizes
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Customize Available Screen Sizes}
+
+	\begin{itemize}
+		\item Screen Sizes are configurable via PageTSconfig:
+
+		\lstset{
+			basicstyle=\fontsize{7}{9}\selectfont\ttfamily
+		}
+
+		\begin{lstlisting}
+			mod.web_view.previewFrameWidths {
+			  1780.label = <any LLL or string>
+			  1780.height = 145
+			}
+		\end{lstlisting}
+
+		\item Width is defined by key (here: 1780), height is optional
+		\item Pre-defined sizes can be found in file:\newline
+			\small\texttt{typo3/sysext/core/Configuration/DefaultConfiguration.php}\normalsize
+		\item Labels can be defined via PageTSconfig:
+
+		\begin{lstlisting}
+			mod.web_view.previewFrameWidths {
+			  1280.label = LLL:EXT:viewpage/Resources/Private/Language/locallang.xlf:computer
+			  1024.label = LLL:EXT:viewpage/Resources/Private/Language/locallang.xlf:tablet
+			}
+		\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Responsive Image Galleries
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Responsive Image Galleries}
+
+	\begin{itemize}
+		\item Additional attributes to implement responsive image galleries
+		\item "CSS styled content" expanded to achieve this
+		\item Example: HTML5 (requires \texttt{config.doctype = html5})\newline
+
+			TYPO3 CMS < 6.2:
+
+			\lstset{
+				basicstyle=\fontsize{7}{9}\selectfont\ttfamily
+			}
+
+			\begin{lstlisting}
+				<div class="csc-textpic-imagewrap">...</div>
+			\end{lstlisting}
+
+			TYPO3 CMS >= 6.2:
+
+			\begin{lstlisting}
+				<div class="csc-textpic-imagewrap"
+				  data-csc-images="{register:imageCount}"
+				  data-csc-cols="{field:imagecols}">...</div>
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Responsive Image Rendering
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Responsive Image Rendering}
+
+	\begin{itemize}
+		\item cObject IMAGE renders a so-called "sourceCollection" to support various screen dimensions
+		\item Responsive image rendering for cObjects "text/image" and "image" requires two settings in Constant Editor:
+
+			\texttt{styles.content.imgtext.responsive}\newline
+			\texttt{styles.content.imgtext.layoutKey}
+
+		\item Valid ("out of the box") options are:
+
+			\begin{itemize}
+				\item \texttt{default}:	\tabto{2cm} default \texttt{<img>}-tag
+				\item \texttt{srcset}:	\tabto{2cm} \texttt{<img>}-tag with alternate sources as srcset-attribute
+				\item \texttt{picture}:	\tabto{2cm} \texttt{<picture>}-tag with source-child-tags
+				\item \texttt{data}:	\tabto{2cm} \texttt{<img>}-tag with alternate sources as data-attributes
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Property: layoutKey
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Property: layoutKey}
+
+	\begin{itemize}
+		\item \texttt{layoutKey} defines render layout\newline
+			(this is the HTML code, used for the \texttt{<img>}-tag)
+		\item Each option shows unique behaviour for HTML rendering
+		\item Option \texttt{default} renders the \texttt{<img>}-tag traditionally\newline
+			(this should be used, if frontend is not responsive)
+		\item Implementing a responsive layout requires different image dimensions for various resolutions and screen sizes
+		\item Depending on HTML framework, browser capabilities and JavaScript library (for progressive enhancement):
+
+			\begin{itemize}
+				\item use one of the pre-defined layouts or
+				\item define your own custom layout
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Property: layout
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Property: layout}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		layoutKey = {$styles.content.imgtext.layoutKey}
+		layout {
+		  default {
+		    element = <img src="###SRC###" width="###WIDTH###" height="###HEIGHT###" ###PARAMS###
+		      ###ALTPARAMS### ###BORDER######SELFCLOSINGTAGSLASH###>
+		  }
+		  srcset {
+		    element = <img src="###SRC###" srcset="###SOURCECOLLECTION###" ###PARAMS###
+		      ###ALTPARAMS### ###SELFCLOSINGTAGSLASH###>
+		    source = |*|###SRC### ###SRCSETCANDIDATE###,|*|###SRC### ###SRCSETCANDIDATE###
+		  }
+		  picture {
+		    element = <picture>###SOURCECOLLECTION###<img src="###SRC###" ###PARAMS###
+		      ###ALTPARAMS######SELFCLOSINGTAGSLASH###></picture>
+		    source = <source src="###SRC###" media="###MEDIAQUERY###"###SELFCLOSINGTAGSLASH###>
+		  }
+		  data {
+		    element = <img src="###SRC###" ###SOURCECOLLECTION### ###PARAMS###
+		      ###ALTPARAMS######SELFCLOSINGTAGSLASH###>
+		    source = data-###DATAKEY###="###SRC###"
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Property: layout.[layoutKey].element
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Property: layout.[layoutKey].element}
+
+	\begin{itemize}
+		\item \lstinline!###SRC###!\newline
+			URL for attribute: \texttt{src}
+
+		\item \lstinline!###WIDTH###!\newline
+			Image width (in pixel) for attribute: \texttt{width}
+
+		\item \lstinline!###HEIGHT###!\newline
+			Image height (in pixel) for attribute: \texttt{height}
+
+		\item \lstinline!###PARAMS###!\newline
+			Additional parameters as defined in cObject IMAGE
+
+		\item \lstinline!###ALTPARAMS###!\newline
+			Additional alternative parameters as defined in cObject IMAGE
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Property: layout.[layoutKey].element
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Property: layout.[layoutKey].element}
+
+	\begin{itemize}
+		\item \lstinline!###BORDER###!\newline
+			Border (in pixel) for attribute: \texttt{border}
+
+		\item \lstinline!###SELFCLOSINGTAGSLASH###!\newline
+			Closing tag, e.g. \texttt{<img ... />} vs. \texttt{<img ... >}\newline
+			(depends on \texttt{config.xhtmlDoctype} or \texttt{config.doctype})
+
+		\item \lstinline!###SOURCECOLLECTION###!\newline
+			Additional image sources, depends on usage of responsive web design.
+			Exact values are defined in key: \texttt{layout.[layoutKey].source}
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Property: sourceCollection.[dataKey]
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Property: sourceCollection.[dataKey]}
+
+	\begin{itemize}
+		\item Default sourceCollection of EXT:css\_styled\_content
+		\item Writing your own sourceCollection is highly recommended
+
+			\lstset{
+				basicstyle=\tiny\ttfamily
+			}
+
+			\begin{lstlisting}
+				sourceCollection {
+				  small {
+				    width = 200
+				    srcsetCandidate = 600w
+				    mediaQuery = (max-device-width: 600px)
+				    dataKey = small
+				  }
+				  smallRetina {
+				    if.directReturn = 1
+				    width = 200
+				    pixelDensity = 2
+				    srcsetCandidate = 600w 2x
+				    mediaQuery = (max-device-width: 600px) AND (min-resolution: 192dpi)
+				    dataKey = smallRetina
+				  }
+				}
+			\end{lstlisting}
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Further Resources (External Links)
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Responsive Images}
+	\framesubtitle{Further Resources}
+
+	\begin{itemize}
+		\item Working code example:\newline
+			\small\url{http://wiki.typo3.org/Responsive_Image_Rendering}\normalsize
+
+		\item Article by Sven Wolfermann on typo3.org:\newline
+			\small\url{http://typo3.org/news/article/responsive-image-rendering-in-typo3-cms-62/}\normalsize
+
+		\item W3C specification:\newline
+			\small\url{http://www.w3.org/html/wg/drafts/srcset/w3c-srcset/}\newline
+			\small\url{http://www.w3.org/TR/html-picture-element/}
+
+		\item Working-Draft of the "Responsive Image Community Group":\newline
+			\small\url{http://responsiveimages.org}\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

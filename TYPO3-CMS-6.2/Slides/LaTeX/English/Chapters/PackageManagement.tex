@@ -1,0 +1,217 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Package Management" (English Version)
+%
+% @author	Michael Schams <schams.net>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	English
+% ------------------------------------------------------------------------------
+% Chapter: Package Management
+% ------------------------------------------------------------------------------
+
+\section{Package Management}
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+
+	\begin{center}\huge{Chapter 5:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Package Management}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager
+% ------------------------------------------------------------------------------
+% http://wiki.typo3.org/Blueprints/Packagemanager
+% http://forge.typo3.org/issues/47018
+% http://forge.typo3.org/issues/52737
+
+	\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager}
+
+	\begin{itemize}
+		\item TYPO3 Flow's \textbf{Package Manager} ported to TYPO3 CMS
+		\item Development/exploration started during TYPO3 CMS 6.1 development
+		\item This project aims to harmonize package formats
+		\item Extensions in TYPO3 CMS are just a special type of "Packages"
+		\item Main project goals:
+
+			\begin{itemize}
+				\item Proper API for Package Management
+				\item Vendor Namespace Support
+				\item Composer Package Support
+				\item Flow Package Support
+				\item Autoloader Re-factoring
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager Integration}
+
+	\begin{itemize}
+		\item Removal of \texttt{\$TYPO3\_CONF['EXT']['extListArray']} from file\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.php}\normalsize
+
+		\item Old content of file \small\texttt{typo3conf/LocalConfiguration.php} copied to\normalsize\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.beforePackageStatesMigration.php}\normalsize
+
+		\item File \texttt{typo3conf/PackageStates.php} contains:
+
+			\begin{itemize}
+				\item status of package (active/inactive)
+				\item extension location in filesystem
+			\end{itemize}
+
+		\item Extensions in the following directories are automatically detected:
+
+			\begin{itemize}
+				\item \texttt{typo3/sysext/}
+				\item \texttt{typo3/ext/}
+				\item \texttt{typo3/contrib/}
+				\item \texttt{typo3conf/ext/}
+				\item \texttt{Packages/} \emph{(recursive)}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager Integration}
+
+	\begin{itemize}
+
+		\item Two new (additional) files in extension's directory:
+
+			\begin{itemize}
+				\item \texttt{composer.json}
+				\item \texttt{Classes/Package.php}
+			\end{itemize}
+
+		\item If extension is required, a \texttt{protected} flag is to be set in file \texttt{composer.json}
+
+		\item If file \texttt{PackageStates.php} is missing, it will be (re-)created,\newline
+			containing all extensions, which have the property above set to \texttt{TRUE}
+
+		\item Autoloader receives its own caching backend
+
+		\item Further information:\newline
+			\url{http://wiki.typo3.org/Blueprints/Packagemanager}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager Integration}
+
+	Example: \texttt{typo3conf/PackageManager.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+		% basicstyle=\fontsize{5}{7}\selectfont\ttfamily
+	}
+
+	\begin{lstlisting}
+		return array ('packages' =>
+		    array (
+		      'core' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/core',
+		          'state' => 'active',
+		          'packagePath' => 'typo3/sysext/core/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      'workspaces' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/workspaces',
+		          'state' => 'inactive',
+		          'packagePath' => 'typo3/sysext/workspaces/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      ...
+		    ),
+		    'version' => 4,
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager Integration}
+
+	Example: \texttt{composer.json}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		{
+		  "name": "typo3/cms-indexed-search",
+		  "type": "typo3-cms-framework",
+		  "description": "TYPO3 Core",
+		  "homepage": "http://typo3.org",
+		  "license": ["GPL-2.0+"],
+		  "version": "6.2.0",
+		  "require": {
+		    "typo3/cms-core": "*"
+		  },
+		  "replace": {
+		    "indexed_search": "*"
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Package Management}
+	\framesubtitle{Package Manager Integration}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Packages can also be activated at runtime by using the key:
+			\smaller\texttt{\$GLOBALS['TYPO3\_CONF\_VARS']['EXT']['runtimeActivatedPackages'] = array(}\space\textit{packageKey}\space\texttt{);}\normalsize
+
+		\item This key is activated immediately after the initialisation of the Package Management
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+

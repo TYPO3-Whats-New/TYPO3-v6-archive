@@ -1,0 +1,217 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Package Management" (French version)
+%
+% @author	Paul Blondiaux <pblondiaux@sodifrance.fr>
+% @author	Philippe Herault <philippe.herault@plan-net.fr>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	French
+% ------------------------------------------------------------------------------
+% Chapter: Package Management
+% ------------------------------------------------------------------------------
+
+\section{Package Management}
+\begin{frame}[fragile]
+	\frametitle{Gestion des Paquets}
+
+	\begin{center}\huge{Chapitre 5 :}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{Gestion des paquets}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager
+% ------------------------------------------------------------------------------
+% http://wiki.typo3.org/Blueprints/Packagemanager
+% http://forge.typo3.org/issues/47018
+% http://forge.typo3.org/issues/52737
+
+\begin{frame}[fragile]
+	\frametitle{Gestion des paquets}
+	\framesubtitle{Gestionnaire de paquets}
+
+	\begin{itemize}
+		\item Le \textbf{Package Manager} de TYPO3 Flow à été porté sur TYPO3 CMS
+		\item Le développement et l'exploration de cette fonctionnalité ont débuté pendant le développement de la version TYPO3 CMS 6.1
+		\item Ce projet vise à harmoniser les formats des paquets
+		\item Les extensions dans TYPO3 CMS sont juste un type particulier de \newline
+				« paquets »
+		\item Objectifs principaux du projet :
+
+			\begin{itemize}
+				\item Une API ad hoc pour la gestion des paquets
+				\item Un support « Vendor Namespace »
+				\item Un support pour les « Composer Package »
+				\item Un support pour les « Flow Package »
+				\item Réécriture de l'autoloader
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Gestion des paquets}
+	\framesubtitle{Intégration du gestionnaire de paquets (1)}
+
+	\begin{itemize}
+		\item Retrait de \texttt{\$TYPO3\_CONF['EXT']['extListArray']} du fichier\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.php}\normalsize
+
+		\item L'ancien contenu du fichier \small\texttt{typo3conf/LocalConfiguration.php} a été copié dans \normalsize\newline
+			\smaller\texttt{typo3conf/LocalConfiguration.beforePackageStatesMigration.php}\normalsize
+
+		\item Le fichier \texttt{typo3conf/PackageStates.php} contient :
+
+			\begin{itemize}
+				\item le statut du paquet (actif/inactif)
+				\item l'emplacement physique de l'extension
+			\end{itemize}
+
+		\item Les extensions placées dans les dossiers suivants sont automatiquement détectées :
+			\begin{itemize}
+				\item \texttt{typo3/sysext/}
+				\item \texttt{typo3/ext/}
+				\item \texttt{typo3/contrib/}
+				\item \texttt{typo3conf/ext/}
+				\item \texttt{Packages/} \emph{(recursif)}
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Package Manager Integration
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Gestion des paquets}
+	\framesubtitle{Intégration du gestionnaire de paquets (2)}
+
+	\begin{itemize}
+
+		\item Deux nouveaux fichiers dans le répertoire de l'extension :
+
+			\begin{itemize}
+				\item \texttt{composer.json}
+				\item \texttt{Classes/Package.php}
+			\end{itemize}
+
+		\item Si l'extension est requise, l'indicateur \texttt{protected} doit être défini dans le fichier \texttt{composer.json}
+
+		\item Si le fichier \texttt{PackageStates.php} est manquant, il sera automatiquement (re)créé avec la liste de toutes les extensions qui ont la propriété ci-dessus à \texttt{TRUE}
+
+		\item L'Autoloader a son propre cache Backend
+
+		\item En savoir plus :\newline
+			\url{http://wiki.typo3.org/Blueprints/Packagemanager}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Gestion des paquets}
+	\framesubtitle{Intégration du gestionnaire de paquets (3)}
+
+	Exemple : \texttt{typo3conf/PackageManager.php}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+		% basicstyle=\fontsize{5}{7}\selectfont\ttfamily
+	}
+
+	\begin{lstlisting}
+		return array ('packages' =>
+		    array (
+		      'core' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/core',
+		          'state' => 'active',
+		          'packagePath' => 'typo3/sysext/core/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      'workspaces' =>
+		        array (
+		          'manifestPath' => '',
+		          'composerName' => 'typo3/cms/workspaces',
+		          'state' => 'inactive',
+		          'packagePath' => 'typo3/sysext/workspaces/',
+		          'classesPath' => 'Classes/',
+		        ),
+		      ...
+		    ),
+		    'version' => 4,
+		);
+	\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Examples
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Gestion des paquets}
+	\framesubtitle{Intégration du gestionnaire de paquets (4)}
+
+	Exemple : \texttt{composer.json}
+
+	\lstset{
+		basicstyle=\tiny\ttfamily
+	}
+
+	\begin{lstlisting}
+		{
+		  "name": "typo3/cms-indexed-search",
+		  "type": "typo3-cms-framework",
+		  "description": "TYPO3 Core",
+		  "homepage": "http://typo3.org",
+		  "license": ["GPL-2.0+"],
+		  "version": "6.2.0",
+		  "require": {
+		    "typo3/cms-core": "*"
+		  },
+		  "replace": {
+		    "indexed_search": "*"
+		  }
+		}
+	\end{lstlisting}
+
+\end{frame}
+
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% (slide added in March 2014)
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Gestion des paquets}
+	\framesubtitle{Intégration du gestionnaire de paquets (6)}
+
+	\lstset{
+		basicstyle=\smaller\ttfamily
+	}
+
+	\begin{itemize}
+		\item Les paquets peuvent aussi être activés au cours du process grâce à l'instruction :
+			\smaller\texttt{\$GLOBALS['TYPO3\_CONF\_VARS']['EXT']['runtimeActivatedPackages'] = array(}\space\textit{packageKey}\space\texttt{);}\normalsize
+
+		\item Cette instruction est activée immédiatement après l'initialisation de la gestion de Packages
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------

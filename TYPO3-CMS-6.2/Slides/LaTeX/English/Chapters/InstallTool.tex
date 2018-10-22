@@ -1,0 +1,540 @@
+% ------------------------------------------------------------------------------
+% TYPO3 CMS 6.2 LTS - What's New - Chapter "Install Tool" (English Version)
+%
+% @author	Michael Schams <schams.net>
+% @license	Creative Commons BY-NC-SA 3.0
+% @link		http://typo3.org/download/release-notes/whats-new/
+% @language	English
+% ------------------------------------------------------------------------------
+% Chapter: Install Tool
+% ------------------------------------------------------------------------------
+
+\section{Install Tool}
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+
+	\begin{center}\huge{Chapter 1:}\end{center}
+	\begin{center}\huge{\color{typo3darkgrey}\textbf{The Install Tool}}\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Installation
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Installation}
+
+	\begin{itemize}
+		\item Only \underline{one} package is required for an installation:\newline
+				\texttt{typo3\_src-6.2.x.tar.gz} (file size: approx. 20MB)
+		\item "Dummy" and "Blank" packages became obsolete
+		\item Installation:
+			\begin{itemize}
+				\item Extract source package into web root directory
+				\item Create symbolic links as required
+				\item Point web browser to your web root
+				\item TYPO3 Installer starts 1-2-3-4-5-steps wizard
+			\end{itemize}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Installation
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+
+	\frametitle{Install Tool}
+	\framesubtitle{Installation}
+
+	\begin{itemize}
+		\item Installer ensures that all required files and directories are in place
+		\item Files required for a custom setup will be created automatically
+		\item The following symbolic links \underline{must} exist:
+
+		\begin{itemize}
+			\item \texttt{typo3\_src}	\tabto{2cm} (points to TYPO3 source directory)
+			\item \texttt{typo3}		\tabto{2cm} (points to directory: \texttt{typo3\_src/typo3})
+			\item \texttt{index.php}	\tabto{2cm} (points to file: \texttt{typo3\_src/index.php})
+		\end{itemize}
+
+		\item No further files/directories are required to install TYPO3!
+		\item Directory \texttt{t3lib} removed
+		\item Further details: TYPO3 Installation and Upgrade Guide\newline
+			\url{http://docs.typo3.org/typo3cms/InstallationGuide}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Re-Development
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Re-Development}
+
+	\begin{columns}[T]
+
+		\begin{column}{.5\textwidth}
+			\begin{itemize}
+				\item Re-developed from scratch\newline using Fluid
+				\item \underline{First} step tests system environment and reports issues
+				\item Reported issues can be fixed\newline (and re-tested) or ignored
+				\item Invalid core setup (e.g. no symbolic links as recommended) is reported as an issue, too
+			\end{itemize}
+		\end{column}
+
+		\begin{column}{.5\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.8\linewidth]{Images/InstallTool/SystemEnvironmentCheck.png}
+			\end{figure}
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Re-Development
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Re-Development}
+
+	\begin{columns}[T]
+
+		\begin{column}{.5\textwidth}
+			\begin{itemize}
+				\item \underline{Second} step allows users to enter database access details
+				\item Connection types are selectable
+					\begin{itemize}
+						\item TCP/IP based connection
+						\item Socket based connection
+					\end{itemize}
+				\item MySQL alternatives are also possible
+			\end{itemize}
+		\end{column}
+
+		\begin{column}{.5\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.8\linewidth]{Images/InstallTool/DatabaseConnectionDetails.png}
+			\end{figure}
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Re-Development
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Re-Development}
+
+	\begin{columns}[T]
+
+		\begin{column}{.5\textwidth}
+			\begin{itemize}
+				\item \underline{Third} step allows users to select/create the database\newline
+					(as in TYPO3 < 6.2)
+				\item \underline{Fourth} step allows users to set a password for the "admin" user\newline (which is also the initial Install Tool password) and a site name
+			\end{itemize}
+		\end{column}
+
+		\begin{column}{.5\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.8\linewidth]{Images/InstallTool/AdminPasswordAndSiteName.png}
+			\end{figure}
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Clear All Cache
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Clear All Cache}
+
+	\begin{itemize}
+		\item New function under "Important actions" lets users clear all cache
+		\item This also works, if cache contains invalid PHP code\newline
+			(which possibly locks TYPO3 CMS)
+		\item Bypass a not-working TYPO3 instance by accessing the Install Tool directly: \texttt{http://example.com/typo3/install}
+	\end{itemize}
+
+	\begin{columns}[T]
+		\begin{column}{.3\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.7\linewidth]{Images/InstallTool/ImportantActions.png}
+			\end{figure}
+		\end{column}
+		\begin{column}{.7\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.9\linewidth]{Images/InstallTool/ClearAllCache.png}
+			\end{figure}
+		\end{column}
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Clear All Cache
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Clear All Cache}
+
+	Sequence of actions when executing "Clear all cache":
+
+	\begin{enumerate}
+		\item Content of directory \texttt{typo3temp/Cache} is deleted
+		\item Database tables \texttt{cf\_*} are emptied
+		\item Files \texttt{ext\_localconf.php} and \texttt{ext\_tables.php}\newline
+			are loaded from extensions
+		\item \texttt{flushCaches()} are executed
+	\end{enumerate}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Check For Broken Extensions
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Check For Broken Extensions}
+
+	\begin{itemize}
+		\item New function under "Important actions" lets users check,\newline
+			if extensions can be loaded without breaking the system
+		\item Very useful for an update from TYPO3 4.5 to 6.2
+	\end{itemize}
+
+	\begin{columns}[T]
+		\begin{column}{.3\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.7\linewidth]{Images/InstallTool/ImportantActions.png}
+			\end{figure}
+		\end{column}
+		\begin{column}{.7\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=1\linewidth]{Images/InstallTool/CheckForBrokenExtensions.png}
+			\end{figure}
+		\end{column}
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Increased Security: Salted Passwords
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Salted Passwords}
+
+	\begin{itemize}
+		\item When creating new backend administrator user via Install Tool,\newline
+			a \textbf{salted} password is used\newline
+			\smaller(requires installed, loaded and configured EXT:saltedpasswords)\normalsize
+		\item Install Tool password is a \textbf{salted} password as well\newline
+			\smaller(existing MD5 hashes are converted automatically at first login)\normalsize
+	\end{itemize}
+
+	\begin{columns}[T]
+		\begin{column}{.3\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.7\linewidth]{Images/InstallTool/ImportantActions.png}
+			\end{figure}
+		\end{column}
+		\begin{column}{.7\textwidth}
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.9\linewidth]{Images/InstallTool/SaltedPasswords.png}
+			\end{figure}
+		\end{column}
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Application Context
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Application Context (1)}
+
+	\begin{itemize}
+		\item TYPO3 >= 6.2 takes \textbf{Application Context} into account\newline
+			\smaller(known from TYPO3 Flow)\normalsize
+		\item Environment variable \texttt{TYPO3\_CONTEXT} sets the context\newline
+			\smaller(default: \texttt{Production}, sub-context such as \texttt{Production/Staging} possible)\normalsize
+
+			\begin{lstlisting}
+				# File: .htaccess
+				# Rules to set Application Context based on hostname:
+
+				RewriteCond %{HTTP_HOST} ^dev\.example\.com$
+				RewriteRule (.*) $1 [E=TYPO3_CONTEXT:Development]
+
+				RewriteCond %{HTTP_HOST} ^www\.example\.com$
+				RewriteRule (.*) $1 [E=TYPO3_CONTEXT:Production]
+
+				# Sets an environment variable, which is then available to TYPO3 CMS:
+				SetEnv TYPO3_CONTEXT Production
+			\end{lstlisting}
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Presets of TYPO3_CONF_VAR Settings
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Presets of TYPO3\_CONF\_VAR Settings}
+
+	\begin{columns}[T]
+		\begin{column}{.5\textwidth}
+
+			\begin{itemize}
+				\item Certain \texttt{TYPO3\_CONF\_VAR} settings can be configured in Install Tool
+				\item Settings such as debug output, deprecation log, devIPmask and other system logs and log levels
+				\item Build-in contexts: "Production" and "Development"\newline
+					(custom configuration is also possible)
+			\end{itemize}
+
+		\end{column}
+		\begin{column}{.5\textwidth}
+
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.8\linewidth]{Images/InstallTool/PresetsOfSettings.png}
+			\end{figure}
+
+		\end{column}
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Improved Usability
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Improved Usability}
+
+	\begin{columns}[T]
+		\begin{column}{.5\textwidth}
+
+			\begin{itemize}
+				\item Fixed position of menu left-\newline
+					hand-side when scrolling
+					\begingroup\color{typo3red}\textbf{(1)}\endgroup
+				\item Fixed position of button "Write configuration" at the bottom
+					\begingroup\color{typo3red}\textbf{(2)}\endgroup
+				\item Entries in "All Configuration" are grouped (unfold a section by click on headline) and sorted
+					\begingroup\color{typo3red}\textbf{(3)}\endgroup
+			\end{itemize}
+
+		\end{column}
+		\begin{column}{.5\textwidth}
+
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.8\linewidth]{Images/InstallTool/ImprovedUsability.png}
+			\end{figure}
+
+		\end{column}
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Human-Friendly Error Codes
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Human-Friendly Error Codes}
+
+	\begin{itemize}
+		\item Meaningful keywords can be used for the following options:\newline
+			(TYPO3 < 6.2: numeric values only)
+	\end{itemize}
+
+	\begin{columns}[T]
+		\begin{column}{.4\textwidth}
+			\advance\leftskip+0.8cm
+
+			\smaller
+				\texttt{[SYS][errorHandlerErrors]}\newline
+				\texttt{[SYS][exceptionalErrors]}\newline
+				\texttt{[SYS][syslogErrorReporting]}\newline
+				\texttt{[SYS][belogErrorReporting]}\newline
+			\normalsize
+
+		\end{column}
+		\begin{column}{.6\textwidth}
+
+			\begin{figure}\vspace*{-0.4cm}
+				\includegraphics[width=0.9\linewidth]{Images/InstallTool/HumanFriendlyErrorCodes.png}
+			\end{figure}
+
+		\end{column}
+	\end{columns}
+
+	\vspace{0.2cm}
+
+	\begin{itemize}
+		\item An Extbase ViewHelper \textbf{format.phpErrorCode} takes care of the conversion to PHP error codes
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Errors In Folder Structure
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Errors In Folder Structure}
+
+	\begin{itemize}
+		\item Errors under "Folder Structure" are listed as a badge (circled number)
+	\end{itemize}
+
+	\begin{figure}
+		\includegraphics[width=0.95\linewidth]{Images/InstallTool/ErrorsInFolderStructure.png}
+	\end{figure}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Core Updates
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Core Updates}
+
+	\begin{itemize}
+		\item Update TYPO3 core to its latest minor version with a click of a button 
+		\item Environment variable \texttt{TYPO3\_DISABLE\_CORE\_UPDATER=1} disables this feature
+	\end{itemize}
+
+	\begin{figure}
+		\includegraphics[width=0.95\linewidth]{Images/InstallTool/CoreUpdate.png}
+	\end{figure}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Miscellaneous}
+
+	\begin{itemize}
+		\item All forms are CSRF (\textit{cross-site request forgery}) protected
+		\item Install Tool uses a simplified Fluid Standalone View
+		\item Only essential TYPO3 functions are loaded\newline
+			(corrupt \texttt{ext\_localconf.php} or \texttt{ext\_tables.php} of extensions can not break the Install Tool any more)
+		\item New starting point:	\tabto{3.2cm} \texttt{typo3/sysext/install/Start/Install.php}\newline
+			Before:					\tabto{3.2cm} \texttt{typo3/install/index.php}\newline
+									\tabto{3.2cm} (redirect from old to new URL exists)
+		\item Deactivated cache ensures that Install Tool remains usable, even if cache contains invalid PHP code
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Miscellaneous}
+
+	\begin{itemize}
+		\item Check if PHP option \texttt{xdebug.max\_nesting\_level} shows a value of 250 or higher (default value "100" possibly causes problems)
+		\item "Relaxed permission check":
+
+			\small
+				If the web root folder does not have correct permissions set (e.g. "2770"),
+				and this issue can not be fixed, e.g. because the directory does not belong
+				to the system user who runs the Install Tool, the first step of the installation
+				breaks.
+				The option "targetPermissionRelaxed" lowers the severity if permissions are not
+				ideal and allows for continuing installation as long as required sub folders can
+				be created.
+			\normalsize
+
+	\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Miscellaneous
+% ------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Install Tool}
+	\framesubtitle{Miscellaneous}
+
+	\begin{itemize}
+		\item Removed options (keys) from Install Tool\newline
+			\small(and therefore from file \texttt{LocalConfiguration.php}, too):\normalsize
+	\end{itemize}
+
+	\begin{columns}[T]
+		\begin{column}{.5\textwidth}
+			\advance\leftskip+0.8cm
+			\smaller
+				\texttt{BE/loginLabels}\newline
+				\texttt{BE/loginNews}\newline
+				\texttt{BE/useOnContextMenuHandler}\newline
+				\texttt{EXT/em\_mirrorListURL}\newline
+				\texttt{EXT/em\_wsdlURL}\newline
+				\texttt{EXT/extList}\newline
+				\texttt{EXT/extList\_FE}\newline
+				\texttt{EXT/noEdit}\newline
+			\normalsize
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\smaller
+				\texttt{FE/defaultTypoScript\_editorcfg}\newline
+				\texttt{FE/simulateStaticDocuments}\newline
+				\texttt{GFX/noIconProc}\newline
+				\texttt{GFX/TTFLocaleConv}\newline
+				\texttt{SYS/additionalAllowedClassPrefixes}\newline
+				\texttt{SYS/caching/cacheBackends}\newline
+				\texttt{SYS/caching/cacheFrontends}\newline
+				\texttt{SYS/extCache}\newline
+				\texttt{SYS/T3instID}\newline
+			\normalsize
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------------------------
+
